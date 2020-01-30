@@ -1,4 +1,3 @@
 **/summary
-.idea/*
-!.idea/.idea/modules.xml
-!.idea/.idea/HelloTensorflow.iml
+**/dump
+.idea/
