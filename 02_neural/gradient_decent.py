@@ -5,6 +5,7 @@ from com.zhmh.tf import \
     generate_input_tensor, \
     generate_relation_data, \
     generate_elu_l2_layers, \
+    get_regularized_loss, \
     do_train
 from com.zhmh.tf import gpu_first
 gpu_first()
@@ -44,15 +45,16 @@ DATA_X, DATA_Y = generate_relation_data(SAMPLE_SIZE, 2, 1, data_relation)
 """
     定义神经网络
 """
-input_x, input_y = generate_input_tensor(2, 1)
-calc_y = generate_elu_l2_layers(enter_layer=input_x, layers_number=[2, 5, 4, 3, 1])
+layer_neurons = [5, 4, 3]
+input_x, input_y = generate_input_tensor(2, 1, layer_neurons)
+calc_y = generate_elu_l2_layers(enter_layer=input_x, layer_neurons=layer_neurons)
 
 
 """
     定义损失函数
 """
 mse_loss = tf.reduce_sum(tf.pow(input_y - calc_y, 2)) / SAMPLE_SIZE
-l2_loss = tf.add_n(tf.get_collection('losses')) + mse_loss
+l2_loss = get_regularized_loss(mse_loss)
 
 
 """

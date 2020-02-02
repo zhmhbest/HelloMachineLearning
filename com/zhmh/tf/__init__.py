@@ -6,5 +6,6 @@ from .neuron import \
     generate_input_tensor, \
     generate_wb_layers, \
     generate_sigmoid_layers, \
+    get_regularized_loss, \
     generate_elu_l2_layers
 from .training import do_train

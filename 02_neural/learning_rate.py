@@ -35,15 +35,6 @@ def train_exp_decay(demo_name, training_times):
     :return:
     """
     global_step = tf.Variable(0, trainable=False)
-    '''
-      decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
-            learning_rate: 初始学习率
-            global_step: tf.Variable(0, trainable=False)
-            decay_steps: 衰减速度
-            decay_rate: 衰减系数
-            staircase: 是否以离散间隔衰减学习速率
-        # tf.train.exponential_decay
-    '''
     learning_rate = tf.train.exponential_decay(0.1, global_step, 1, 0.96, staircase=True)
     x = tf.Variable(tf.constant(5, dtype=tf.float32), name="x")
     loss = tf.square(x)
