@@ -44,8 +44,10 @@ learning_rate = tf.train.exponential_decay(
 
 ![](images/activation_function.png)
 
+对于`sigmod`函数，在数值过大或过小时，其切线将几乎与x轴平行，导致**梯度消失**，影响反向传播算法。
+
 ```python
-tf.nn.relu(features=DATA)
+tf.nn.relu(features=DATA)  # 首选
 tf.nn.sigmoid(x=DATA)
 tf.nn.tanh(x=DATA)
 ```
