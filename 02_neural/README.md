@@ -180,3 +180,6 @@ for i in range(1, 1 + train_times):
     sess.run(train_adam, feed_dict={input_x: batch_X, input_y: batch_Y})
 ```
 
+## [model reuse](model_reuse.py)
+
+- 模型复用
