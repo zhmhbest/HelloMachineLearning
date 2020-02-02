@@ -78,8 +78,10 @@ cross_entropy = -tf.reduce_mean(
 
 将神经网络的输出变成一个概率分布。
 
-$$softmax(y)_{i}=\dfrac{e^{y_i}}{\sum_{j=1}^{n}e^{y_j}}$$
-
+$$softmax(y)=\dfrac{e^{y_i}}{\sum_{j=1}^{n}e^{y_j}}$$
+<pre>
+$$softmax(y)=\dfrac{e^{y_i}}{\sum_{j=1}^{n}e^{y_j}}$$
+</pre>
 
 原始神经网络的输出被用作置信度来生成新的输出。
 
