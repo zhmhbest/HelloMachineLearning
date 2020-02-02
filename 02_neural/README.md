@@ -57,11 +57,12 @@ tf.nn.tanh(x=DATA)
 
 ### Cross-Entropy
 
-两个概率分布p和q，通过q来表示p的交叉熵为：
-$H(p,q)=-\sum\limits_{X}^{}p(x)\log\ q(x)$
+两个概率分布$p$和$q$，通过$q$来表示$p$的交叉熵为：
+
+$$H(p,q)=-\sum\limits_{X}^{}p(x)\log\ q(x)$$
 
 交叉熵用来刻画两个概率分布之间的距离。
-当交叉熵作为神经网络的损失函数时，p代表的是**目标值**，q代表的是**预测值**。
+当交叉熵作为神经网络的损失函数时，$p$代表的是**目标值**，$q$代表的是**预测值**。
 交叉熵越小两个概率分布越接近。
 交叉熵函数不是对称的：$H(p,q)≠H(q,p)$
 
@@ -77,7 +78,7 @@ cross_entropy = -tf.reduce_mean(
 
 将神经网络的输出变成一个概率分布。
 
-$softmax(y)_i=\dfrac{e^{y_i}}{\sum\nolimits_{j=1}^{n}e^{y_j}}$
+$$softmax(y)_i=\dfrac{e^{y_i}}{\sum\nolimits_{j=1}^{n}e^{y_j}}$$
 
 原始神经网络的输出被用作置信度来生成新的输出。
 
@@ -93,7 +94,7 @@ cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=目标值, logits
 - $y_i$：目标值
 - $y_i'$：预测值
 
-$MSE(y,y')=\dfrac{\sum\nolimits_{i=1}^{n}(y_i-y_i')^2}{n}$
+$$MSE(y,y')=\dfrac{\sum\nolimits_{i=1}^{n}(y_i-y_i')^2}{n}$$
 
 ```python
 mse = tf.reduce_mean(tf.square(目标值 - 预测值))
@@ -106,7 +107,7 @@ mse = tf.reduce_mean(tf.square(目标值 - 预测值))
 >对于线性回归模型，使用L1正则化的模型建叫做Lasso回归
 >使用L2正则化的模型叫做Ridge回归
 
-$loss=J(θ)+λR(θ)$
+$$loss=J(θ)+λR(θ)$$
 
 - $J(θ)$：未加入正则化时的损失函数
 - $λR(θ)$：正则化惩罚项
@@ -115,15 +116,15 @@ $loss=J(θ)+λR(θ)$
 
 L1正则化会让参数变得更稀疏，即会有更多的参数变为0。
 
-$R(W)=\|{w}\|_1=\sum\limits_i|w_i|$
+$$R(W)=\|{w}\|_1=\sum\limits_i|w_i|$$
 
 ### L2
 
-$R(W)=\|{w}\|_2^2=\sum\limits_i|w_i^2|$
+$$R(W)=\|{w}\|_2^2=\sum\limits_i|w_i^2|$$
 
 ### L1 + L2
 
-$R(W)=\sum\limits_i{α|w_i|+(1-α)|w_i^2|}$
+$$R(W)=\sum\limits_i{α|w_i|+(1-α)|w_i^2|}$$
 
 ```python
 tf.contrib.layers.l1_regularizer(λ)(w)
@@ -156,7 +157,7 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 
 ![](images/gd.png)
 
-$θ_{n+1}=θ_n-η\dfrac{∂}{∂θ_n}J(θ_n)$
+$$θ_{n+1}=θ_n-η\dfrac{∂}{∂θ_n}J(θ_n)$$
 
 ![](images/gd2.png)
 
