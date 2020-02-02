@@ -57,8 +57,7 @@ tf.nn.tanh(x=DATA)
 ### Cross-Entropy
 
 两个概率分布p和q，通过q来表示p的交叉熵为：
-<!-- $H(p,q)=-\sum\limits_{X}^{}p(x)\log\ q(x)$ -->
-<img src="https://www.zhihu.com/equation?tex=H(p,q)=-\sum\limits_{X}^{}p(x)\log\ q(x)">
+$H(p,q)=-\sum\limits_{X}^{}p(x)\log\ q(x)$
 
 交叉熵用来刻画两个概率分布之间的距离。
 当交叉熵作为神经网络的损失函数时，p代表的是**目标值**，q代表的是**预测值**。
