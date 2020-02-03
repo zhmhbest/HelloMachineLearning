@@ -6,7 +6,7 @@ from com.zhmh.tf import \
     generate_relation_data, \
     generate_activation_l2_layers, \
     get_regularized_loss, \
-    do_train
+    do_simple_train
 from com.zhmh.tf import gpu_first
 gpu_first()
 
@@ -15,9 +15,10 @@ gpu_first()
     配置参数
 """
 SAMPLE_SIZE = 600
-TRAINING_TIMES = 6000
+TRAINING_TIMES = 8000
 LEARNING_RATE = 0.001
-
+REG_WEIGHT = 0.003
+HIDDEN_LAYERS = [5, 4, 3]
 
 """
     生成随机数据
@@ -45,9 +46,9 @@ DATA_X, DATA_Y = generate_relation_data(SAMPLE_SIZE, 2, 1, data_relation)
 """
     定义神经网络
 """
-layer_neurons = [5, 4, 3]
+layer_neurons = HIDDEN_LAYERS
 input_x, input_y = generate_input_tensor(2, 1, layer_neurons)
-calc_y = generate_activation_l2_layers(reg_weight=0.003, enter_layer=input_x, layer_neurons=layer_neurons)
+calc_y = generate_activation_l2_layers(reg_weight=REG_WEIGHT, enter_layer=input_x, layer_neurons=layer_neurons)
 
 
 """
@@ -81,27 +82,26 @@ def do_sub(sess):
 
 
 # 欠拟合
-do_train(
+do_simple_train(
     tf.train.AdamOptimizer(LEARNING_RATE).minimize(mse_loss),
-    500,
     {input_x: DATA_X, input_y: DATA_Y},
+    train_times=400,
     train_after=do_sub
 )
 
 
 # 过拟合
-do_train(
+do_simple_train(
     tf.train.AdamOptimizer(LEARNING_RATE).minimize(mse_loss),
-    TRAINING_TIMES,
     {input_x: DATA_X, input_y: DATA_Y},
+    train_times=TRAINING_TIMES,
     train_after=do_sub
 )
 
-
 # 加入L2正则化
-do_train(
+do_simple_train(
     tf.train.AdamOptimizer(LEARNING_RATE).minimize(l2_loss),
-    TRAINING_TIMES,
     {input_x: DATA_X, input_y: DATA_Y},
+    train_times=TRAINING_TIMES,
     train_after=do_sub
 )

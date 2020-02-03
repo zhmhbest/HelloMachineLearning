@@ -89,40 +89,50 @@ class RichPrint:
 
 
 def do_train(
-        train_op,
         train_times,
-        feed_dict,
+        train_what,
 
         train_before=None,
-        train_next=None,
         train_after=None
 ):
     """
     训练
-    :param train_op:
-    :param train_times:
-    :param feed_dict:
+    :param train_times: 训练次数
+    :param train_what: function(sess, index)
 
     :param train_before: function(sess)
-    :param train_next: function(index)
     :param train_after: function(sess)
     :return:
     """
+    show_every = train_times / 200
+
+    def progress_bar(index):
+        """
+        打印进度条
+        :param index:
+        :return:
+        """
+        nonlocal show_every
+        if 0 == index % show_every:
+            RichPrint.progress_bar(index / train_times)
+
     with tf.Session() as sess:
-        # 初始化全部变量OP
         tf.global_variables_initializer().run()
 
         if train_before is not None:
             train_before(sess)
 
-        if train_next is None:
-            show_every = train_times / 200
-            train_next = (lambda index: RichPrint.progress_bar(index / train_times) if 0 == index % show_every else None)
-
         for i in range(1, 1 + train_times):
-            sess.run(train_op, feed_dict=feed_dict)
-            train_next(i)
+            train_what(sess, i)
+            progress_bar(i)
         # end for
 
         if train_after is not None:
             train_after(sess)
+
+
+def do_simple_train(train_optimizer, feed_dict, **kwargs):
+    def train_what(sess, i):
+        sess.run(train_optimizer, feed_dict=feed_dict)
+    do_train(**kwargs, train_what=train_what)
+

@@ -10,4 +10,4 @@ from .neuron import \
     generate_activation_layers, \
     generate_activation_l2_layers, \
     generate_activation_l2_ema_layers
-from .training import do_train
+from .training import do_train, do_simple_train

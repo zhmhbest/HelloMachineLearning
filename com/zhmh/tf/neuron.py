@@ -23,7 +23,8 @@ def generate_wb_layers(
         layer_neurons,
         init_w=None,
         init_b=None,
-        next_layer=None
+        next_layer=None,
+        new_variable=True
 ):
     """
     创建新的网络（仅有权重和偏置顶）
@@ -33,12 +34,13 @@ def generate_wb_layers(
     :param init_w: function(current_layer) 如何初始化权重
     :param init_b: function(current_layer) 如何初始化偏置顶
     :param next_layer: function(weight, biases, x, i) 其它修正
+    :param new_variable: 新建变量
     :return:
     """
     if init_w is None:
-        init_w = (lambda current_l: tf.random_normal(shape=current_l, stddev=1))
+        init_w = (lambda current_l: tf.truncated_normal_initializer(stddev=1))
     if init_b is None:
-        init_b = (lambda current_l: tf.constant(value=0.1, shape=[current_l[1]]))
+        init_b = (lambda current_l: tf.constant_initializer(0.1))
     if next_layer is None:
         next_layer = (
             lambda current_w, current_b, current_x, current_i:
@@ -50,9 +52,16 @@ def generate_wb_layers(
     for _i_ in range(1, len(layer_neurons)):
         current_layer[0], current_layer[1] = layer_neurons[_i_ - 1], layer_neurons[_i_]
         # ------------------------------------ #
-        weights = tf.Variable(init_w(current_layer))
-        biases = tf.Variable(init_b(current_layer))
-        x = next_layer(weights, biases, x, _i_)
+        if new_variable:
+            with tf.variable_scope('layer' + str(_i_)):
+                weights = tf.get_variable("weights", current_layer, initializer=init_w(current_layer))
+                biases = tf.get_variable("biases", [current_layer[1]], initializer=init_b(current_layer))
+            x = next_layer(weights, biases, x, _i_)
+        else:
+            with tf.variable_scope('layer' + str(_i_), reuse=True):
+                weights = tf.get_variable("weights")
+                biases = tf.get_variable("biases")
+            x = next_layer(weights, biases, x, _i_)
         # ------------------------------------ #
     # end for
     return x
@@ -103,15 +112,21 @@ def generate_activation_l2_ema_layers(decay, reg_weight, loss_collection_name='l
     # end if
 
     def do_next(w, b, x, i):
-        nonlocal l2_regularizer, ema, ema_x
+        nonlocal activation, l2_regularizer
         tf.add_to_collection(loss_collection_name, l2_regularizer(w))
-        ema_x = activation(tf.matmul(ema_x, ema.apply(w)) + ema.apply(b))
         return activation(tf.matmul(x, w) + b)
+    # end def
+
+    def do_ema_next(w, b, x, i):
+        nonlocal activation, ema
+        return activation(tf.matmul(x, ema.average(w)) + ema.average(b))
     # end def
 
     l2_regularizer = tf.contrib.layers.l2_regularizer(reg_weight)
     global_step = tf.Variable(0, trainable=False)
     ema = tf.train.ExponentialMovingAverage(decay, global_step)
-    ema_x = kwargs['enter_layer']
 
-    return generate_wb_layers(**kwargs, next_layer=do_next), ema_x, global_step
+    y = generate_wb_layers(**kwargs, next_layer=do_next)
+    averages_op = ema.apply(tf.trainable_variables())  # 创建影子变量
+    ema_y = generate_wb_layers(**kwargs, next_layer=do_ema_next, new_variable=False)
+    return y, ema_y, averages_op, global_step
