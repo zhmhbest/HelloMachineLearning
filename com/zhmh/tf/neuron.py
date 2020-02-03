@@ -18,6 +18,10 @@ def generate_input_tensor(feature_number, target_number, inner_layer_neurons=Non
     return input_x, input_y
 
 
+def is_not_last_layer(i, kwargs):
+    return i != (len(kwargs['layer_neurons']) - 1)
+
+
 def generate_wb_layers(
         enter_layer,
         layer_neurons,
@@ -40,7 +44,7 @@ def generate_wb_layers(
     if init_w is None:
         init_w = (lambda current_l: tf.truncated_normal_initializer(stddev=1))
     if init_b is None:
-        init_b = (lambda current_l: tf.constant_initializer(0.1))
+        init_b = (lambda current_l: tf.constant_initializer(0.001))
     if next_layer is None:
         next_layer = (
             lambda current_w, current_b, current_x, current_i:
@@ -54,13 +58,13 @@ def generate_wb_layers(
         # ------------------------------------ #
         if new_variable:
             with tf.variable_scope('layer' + str(_i_)):
-                weights = tf.get_variable("weights", current_layer, initializer=init_w(current_layer))
-                biases = tf.get_variable("biases", [current_layer[1]], initializer=init_b(current_layer))
+                weights = tf.get_variable(name="weights", shape=current_layer, initializer=init_w(current_layer))
+                biases = tf.get_variable(name="biases", shape=[current_layer[1]], initializer=init_b(current_layer))
             x = next_layer(weights, biases, x, _i_)
         else:
             with tf.variable_scope('layer' + str(_i_), reuse=True):
-                weights = tf.get_variable("weights")
-                biases = tf.get_variable("biases")
+                weights = tf.get_variable(name="weights")
+                biases = tf.get_variable(name="biases")
             x = next_layer(weights, biases, x, _i_)
         # ------------------------------------ #
     # end for
@@ -68,10 +72,14 @@ def generate_wb_layers(
 
 
 def generate_activation_layers(activation=None, **kwargs):
+    def do_next(w, b, x, i):
+        nonlocal activation
+        return activation(tf.matmul(x, w) + b) if is_not_last_layer(i, kwargs) else tf.matmul(x, w) + b
+    # end def
     if activation is None:
         activation = tf.nn.elu
     # end if
-    return generate_wb_layers(**kwargs, next_layer=(lambda w, b, x, i: activation(tf.matmul(x, w) + b)))
+    return generate_wb_layers(**kwargs, next_layer=do_next)
 
 
 def get_regularized_loss(loss, loss_collection_name='losses'):
@@ -89,15 +97,14 @@ def generate_activation_l2_layers(reg_weight, loss_collection_name='losses', act
     激活函数+L2正则化
     :return: y
     """
-    if activation is None:
-        activation = tf.nn.elu
-    # end if
-
     def do_next(w, b, x, i):
         nonlocal activation, l2_regularizer
         tf.add_to_collection(loss_collection_name, l2_regularizer(w))
-        return activation(tf.matmul(x, w) + b)
+        return activation(tf.matmul(x, w) + b) if is_not_last_layer(i, kwargs) else tf.matmul(x, w) + b
     # end def
+    if activation is None:
+        activation = tf.nn.elu
+    # end if
     l2_regularizer = tf.contrib.layers.l2_regularizer(reg_weight)
     return generate_wb_layers(**kwargs, next_layer=do_next)
 
@@ -114,12 +121,15 @@ def generate_activation_l2_ema_layers(decay, reg_weight, loss_collection_name='l
     def do_next(w, b, x, i):
         nonlocal activation, l2_regularizer
         tf.add_to_collection(loss_collection_name, l2_regularizer(w))
-        return activation(tf.matmul(x, w) + b)
+        return activation(tf.matmul(x, w) + b) if is_not_last_layer(i, kwargs) else tf.matmul(x, w) + b
     # end def
 
     def do_ema_next(w, b, x, i):
         nonlocal activation, ema
-        return activation(tf.matmul(x, ema.average(w)) + ema.average(b))
+        if is_not_last_layer(i, kwargs):
+            return activation(tf.matmul(x, ema.average(w)) + ema.average(b))
+        else:
+            return tf.matmul(x, ema.average(w)) + ema.average(b)
     # end def
 
     l2_regularizer = tf.contrib.layers.l2_regularizer(reg_weight)
