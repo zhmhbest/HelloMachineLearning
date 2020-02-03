@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from com.zhmh.tf import \
     generate_input_tensor, \
     generate_relation_data, \
-    generate_elu_l2_layers, \
+    generate_activation_l2_layers, \
     get_regularized_loss, \
     do_train
 from com.zhmh.tf import gpu_first
@@ -47,7 +47,7 @@ DATA_X, DATA_Y = generate_relation_data(SAMPLE_SIZE, 2, 1, data_relation)
 """
 layer_neurons = [5, 4, 3]
 input_x, input_y = generate_input_tensor(2, 1, layer_neurons)
-calc_y = generate_elu_l2_layers(enter_layer=input_x, layer_neurons=layer_neurons)
+calc_y = generate_activation_l2_layers(reg_weight=0.003, enter_layer=input_x, layer_neurons=layer_neurons)
 
 
 """
