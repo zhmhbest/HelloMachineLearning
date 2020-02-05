@@ -1,5 +1,5 @@
 import tensorflow as tf
-from com.zhmh.tf import generate_input_tensor, generate_activation_l2_ema_layers, get_regularized_loss
+from com.zhmh.tf import generate_input_tensor, generate_activation_l2_ema_layers, get_regularized_loss, DataHolder
 from com.zhmh.tf import do_train
 from com.zhmh.tf import gpu_first
 gpu_first()
@@ -18,13 +18,20 @@ def load_mnist_data():
     tf.logging.set_verbosity(tf.logging.ERROR)
     mnist = input_data.read_data_sets("./dump/MNIST_data/", one_hot=True)
     tf.logging.set_verbosity(log_v)
-    # x_train, y_train, x_test, y_test = mnist.train.images, mnist.train.labels, mnist.test.images, mnist.test.labels
-    # print('X_train.shape:', x_train.shape)
-    # print('X_test.shape:', x_test.shape)
-    # print('y_train.shape:', y_train.shape)
-    # print('y_test.shape:', y_test.shape)
-    # return x_train, y_train, x_test, y_test, mnist
-    return mnist
+
+    mnist_data = DataHolder({
+        'train': {
+            'feature':    mnist.train.images,
+            'target':     mnist.train.labels,
+            'size':       mnist.train.num_examples
+        },
+        'test': {
+            'feature':    mnist.test.images,
+            'target':     mnist.test.labels,
+            'size':       mnist.test.num_examples
+        }
+    })
+    return mnist, mnist_data
 
 
 """
@@ -46,7 +53,9 @@ MODEL_SAVE = "./dump/MNIST_model/mnist_model"
 """
     加载数据
 """
-mnist = load_mnist_data()
+# mnist = load_mnist_data()
+mnist, mnist_data = load_mnist_data()
+mnist_data.set_batch_size(BATCH_SIZE)
 
 
 """
@@ -59,6 +68,7 @@ y, averages_y, averages_op, global_step = generate_activation_l2_ema_layers(
     enter_layer=input_x, layer_neurons=HIDDEN_LAYERS, activation=tf.nn.relu,
     init_w=(lambda c: tf.truncated_normal_initializer(stddev=0.1))
 )
+mnist_data.set_input(input_x, input_y)
 
 
 """
@@ -76,7 +86,7 @@ averages_accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(averages_y, 1), tf
 learning_rate = tf.train.exponential_decay(
     LEARNING_RATE_BASE,
     global_step,
-    mnist.train.num_examples / BATCH_SIZE, LEARNING_RATE_DECAY,
+    mnist_data.get_train_size() / BATCH_SIZE, LEARNING_RATE_DECAY,
     staircase=True
 )
 train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
@@ -85,32 +95,33 @@ with tf.control_dependencies([train_step, averages_op]):
 
 
 def train_what(sess, i):
-    global input_x, input_y
+    global mnist_data
     global train_op, global_step
     global accuracy, loss, y, averages_y
 
-    xs, ys = mnist.train.next_batch(BATCH_SIZE)
-    sess.run(train_op, feed_dict={input_x: xs, input_y: ys})
+    # xs, ys = mnist.train.next_batch(BATCH_SIZE)
+    feed_dict = mnist_data.next_batch(i)
+    sess.run(train_op, feed_dict=feed_dict)
     if i % 1000 == 0:
-        va, vl, vg = sess.run([accuracy, loss, global_step], feed_dict={input_x: xs, input_y: ys})
+        va, vl, vg = sess.run([accuracy, loss, global_step], feed_dict=feed_dict)
         print(f"{vg}、accuracy={va}、loss={vl}")
 
 
 def train_after(sess):
-    global input_x, input_y
+    global mnist_data
     global train_op, global_step
     global accuracy, loss, y, averages_y
-    x_train, y_train, x_test, y_test = mnist.train.images, mnist.train.labels, mnist.test.images, mnist.test.labels
-    print("Train Accuracy:", accuracy.eval({input_x: x_train, input_y: y_train}))
-    print("Test Accuracy:", accuracy.eval({input_x: x_test, input_y: y_test}))
-    print("Train Averages Accuracy:", averages_accuracy.eval({input_x: x_train, input_y: y_train}))
-    print("Test Averages Accuracy:", averages_accuracy.eval({input_x: x_test, input_y: y_test}))
+
+    print("Train Accuracy:", accuracy.eval(mnist_data.get_train_feed()))
+    print("Test Accuracy:", accuracy.eval(mnist_data.get_test_feed()))
+    print("Train Averages Accuracy:", averages_accuracy.eval(mnist_data.get_train_feed()))
+    print("Test Averages Accuracy:", averages_accuracy.eval(mnist_data.get_test_feed()))
     print(sess.run(
-        tf.argmax(y_test[:30], 1)), "Real Number")
+        tf.argmax(mnist_data.get_test_data()['target'][:30], 1)), "Real Number")
     print(sess.run(
-        tf.argmax(y[:30], 1), feed_dict={input_x: x_test, input_y: y_test}), "Prediction Number")
+        tf.argmax(y[:30], 1), feed_dict=mnist_data.get_test_feed()), "Prediction Number")
     print(sess.run(
-        tf.argmax(averages_y[:30], 1), feed_dict={input_x: x_test, input_y: y_test}), "Prediction Averages Number")
+        tf.argmax(averages_y[:30], 1), feed_dict=mnist_data.get_test_feed()), "Prediction Averages Number")
     saver.save(sess, MODEL_SAVE, global_step=global_step)
 
 
