@@ -183,3 +183,7 @@ for i in range(1, 1 + train_times):
 ## [model reuse](model_reuse.py)
 
 - 模型复用
+
+## [mnist](mnist.py)
+
+- mnist数据集
