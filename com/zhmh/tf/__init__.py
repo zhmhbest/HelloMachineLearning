@@ -23,3 +23,7 @@ from .neuron import \
 from .training import \
     do_train, \
     do_simple_train
+
+from .cnn import \
+    predict_shape, \
+    generate_one_conv
