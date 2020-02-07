@@ -27,6 +27,14 @@ $$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + bias\right)$$
 
 ![](images/filter.png)
 
+#### 输出大小
+
+对于一个输入$Input_{(W, H, D)}$，若过滤器数为$Filter_{(size=L×L, step=S, padding=P, deep=N)}$，则输出$Output_{(W, H, D)}$为：
+
+- $Output_{(W)} = \dfrac{W-L+2P}{S+1}$
+- $Output_{(H)} = \dfrac{H-L+2P}{S+1}$
+- $Output_{(D)} = N$
+
 ### 池化层（Pooling）
 
 池化层不会改变矩阵的深度，但是可以缩小矩阵的大小。
