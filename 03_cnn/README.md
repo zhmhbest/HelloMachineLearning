@@ -19,10 +19,23 @@
 - **过滤器尺寸**：输入节点矩阵的大小，一般为`3×3`、`5×5`。
 - **过滤器深度**：输出单位节点矩阵的深度。
 
-![](images/filter.png)
+>内积（点积）：向量对应点相乘并求和，返回的是一个实数值。
 
-$$ReLU\left((\sum_{i=1}^{deep} area_i \cdot filter_i) + biases\right)$$
+$$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + biases\right)$$
 
 过滤器每层与输入数据每层求内积并计算和最后加上偏置项就得到输出矩阵上的一个点。
 
+![](images/filter.png)
+
 ### 池化层（Pooling）
+
+池化层不会改变矩阵的深度，但是可以缩小矩阵的大小。
+
+#### 方法
+
+- 最大值（max pooling）
+- 平均值（average pooling）
+
+#### 最大值法
+
+![](images/pool_max.png)
