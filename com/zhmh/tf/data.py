@@ -48,31 +48,23 @@ def generate_relation_data(row_number, feature_col_number, target_col_number, re
     return dataset[:, 0:feature_col_number], dataset[:, feature_col_number:data_col_number]
 
 
-def generate_random_one_rgb_picture(w, h):
+def generate_random_one_rgb_picture(width, height):
     """
     模拟一张RGB图片
-    :param w: 宽度
-    :param h: 高度
+    :param width: 宽度
+    :param height: 高度
     :return:
     """
     def __point__():
         import random
         return random.randint(0, 255)
-    buffer_r = []
-    buffer_g = []
-    buffer_b = []
-    for i in range(w):
-        line_r = []
-        line_g = []
-        line_b = []
-        for j in range(h):
-            line_r.append(__point__())
-            line_g.append(__point__())
-            line_b.append(__point__())
-        buffer_r.append(line_r)
-        buffer_g.append(line_g)
-        buffer_b.append(line_b)
-    return [buffer_r, buffer_g, buffer_b]
+    buffer = []
+    for i in range(width):
+        line = []
+        for j in range(height):
+            line.append([__point__(), __point__(), __point__()])
+        buffer.append(line)
+    return buffer
 
 
 def generate_random_rgb_pictures(width, height, number):
@@ -82,13 +74,16 @@ def generate_random_rgb_pictures(width, height, number):
     return np.array(buffer, np.float)
 
 
-def show_rgb_picture(r, g, b, w, h):
+def show_rgb_picture(data):
     # pip install Pillow
     from PIL import Image
-    im = Image.new("RGB", (w, h))  # 创建图片
-    for i in range(0, w):
-        for j in range(0, h):
-            im.putpixel((i, j), (int(r[i][j]), int(g[i][j]), int(b[i][j])))
+    width = len(data)
+    height = len(data[0])
+    im = Image.new("RGB", (width, height))  # 创建图片
+    for i in range(width):
+        for j in range(height):
+            item = data[i][j]
+            im.putpixel((i, j), (int(item[0]), int(item[1]), int(item[2])))
     im.show()
 
 
