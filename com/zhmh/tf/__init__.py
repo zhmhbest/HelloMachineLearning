@@ -5,6 +5,9 @@ from .environment import gpu_first, set_log_level
 from .data import \
     generate_random_data, \
     generate_relation_data, \
+    generate_random_one_rgb_picture, \
+    generate_random_rgb_pictures, \
+    show_rgb_picture, \
     next_batch, \
     DataHolder
 
