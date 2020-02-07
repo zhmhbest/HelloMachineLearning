@@ -21,7 +21,7 @@
 
 >内积（点积）：向量对应点相乘并求和，返回的是一个实数值。
 
-$$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + biases\right)$$
+$$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + bias\right)$$
 
 过滤器每层与输入数据每层求内积并计算和最后加上偏置项就得到输出矩阵上的一个点。
 
