@@ -184,6 +184,6 @@ for i in range(1, 1 + train_times):
 
 - 模型复用
 
-## [mnist](mnist.py)
+## [mnist](neural_mnist.py)
 
 - mnist数据集

@@ -27,3 +27,5 @@ from .training import \
 from .cnn import \
     predict_shape, \
     generate_one_conv
+
+from .mnist import load_mnist_data
