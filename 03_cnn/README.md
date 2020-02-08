@@ -47,3 +47,21 @@ $$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + bias\right)$$
 #### 最大值法
 
 ![](images/pool_max.png)
+
+## LeNet-5
+
+- 串联卷积
+
+![](images/lenet-5.png)
+
+## Inception-v3
+
+- 并联卷积
+
+![](images/inception.png)
+
+## 迁移学习
+
+所谓迁移学习，就是将一个问题上训练好的模型通过简单的调整使其适用于一个新的问题。
+比如：可以保留训练好的Inception-v3模型中所有卷积层的参数，只是替换最后一层全连接层。在最后这一层全连接层之前的网络层称之为**瓶颈层（bottleneck）**。
+一般来说，在数据量足够的情况下，迁移学习的效果不如完全重新训练。
