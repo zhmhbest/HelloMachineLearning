@@ -1,4 +1,5 @@
 **/summary
 **/dump
 **/test.py
+**/__pycache__
 .idea/
