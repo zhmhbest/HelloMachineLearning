@@ -1,6 +1,6 @@
-import os
+from com.zhmh.tf import set_log_level
 import tensorflow as tf
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+set_log_level(2)
 
 
 a = tf.constant(1, name="a")
