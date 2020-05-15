@@ -2,23 +2,8 @@
 from .board import TensorBoard
 from .environment import force_use_cpu, gpu_first, set_log_level
 from .data import *
+from .neuron import *
+from .training import do_train, do_simple_train
+from .mnist import load_mnist_data
+from .cnn import *
 
-
-# from .neuron import \
-#     generate_input_tensor, \
-#     generate_wb_layers, \
-#     \
-#     get_regularized_loss, \
-#     generate_activation_layers, \
-#     generate_activation_l2_layers, \
-#     generate_activation_l2_ema_layers
-#
-# from .training import \
-#     do_train, \
-#     do_simple_train
-#
-# from .cnn import \
-#     predict_shape, \
-#     generate_one_conv
-#
-# from .mnist import load_mnist_data
