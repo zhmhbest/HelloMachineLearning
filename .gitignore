@@ -1,5 +1,6 @@
 **/__pycache__
 **/dump
 **/cache
+**/summary
 .vscode
 .idea

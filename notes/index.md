@@ -1,8 +1,19 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
-<script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
 # [深度学习](https://github.com/zhmhbest/HelloTensorflow)
 
->学习深度学习前，请确保已经搭建完成[GPU运算环境](https://zhmhbest.github.io/HelloCUDA/)。
+## 序
 
-## [卷积网络](./CNN.html)
+- 实践本知识前，请确保已有一定的[机器学习知识](http://zhmhbest.gitee.io/hellomathematics/notes/MachineLearning/index.html)储备。
+- 请确保已经搭建完成[GPU运算环境](https://zhmhbest.github.io/HelloCUDA/)。
+- [`Tensorflow`](https://tensorflow.google.cn/)是一个端到端开源机器学习平台。
+- [`Keras`](https://keras.io/)是一个用Python编写的高级神经网络API，它能够以TensorFlow作为后端运行。
+
+## [Tensorflow入门](./tf.html)
+
+## [神经网络](./networks.html)
+
+## [Keras入门](./keras.html)
+
+## [卷积网络](./cnn.html)
+
