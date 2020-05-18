@@ -1,6 +1,6 @@
 # Hello Tensorflow
 
-- [Notes](./notes)
+- [View Notes](https://zhmhbest.github.io/HelloTensorflow/notes)
 
 ## 基础知识
 
