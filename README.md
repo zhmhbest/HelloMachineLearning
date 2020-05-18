@@ -5,18 +5,18 @@
 
 ## 基础知识
 
-- [hello](./demo/demo-hello.py)
-- [tensor](./demo/demo-tensor.py)
-- [session](./demo/demo-session.py)
-- [variable](./demo/demo-variable.py)
-- [graph](./demo/demo-graph.py)
-- [board](./demo/demo-board.py)
+- [hello](./demo/base-hello.py)
+- [tensor](./demo/base-tensor.py)
+- [session](./demo/base-session.py)
+- [variable](./demo/base-variable.py)
+- [graph](./demo/base-graph.py)
+- [board](./demo/base-board.py)
+- [model reuse](./demo/base-model_reuse.py)
 
 ## 神经网络
 
-- [neural](./demo/demo-neural.py)
-- [learning rate](./demo/demo-learning_rate.py)
-- [model reuse](./demo/demo-model_reuse.py)
-- [fitting](./demo/demo-fitting.py)
-- [mnist](./demo/demo-mnist.py)
-- [cnn](./demo/demo-cnn.py)
+- [neural](./demo/neural.py)
+- [learning rate](./demo/learning_rate.py)
+- [fitting](./demo/fitting.py)
+- [mnist](./demo/mnist.py)
+- [cnn](./demo/cnn.py)
