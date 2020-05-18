@@ -15,8 +15,8 @@
 
 ## 神经网络
 
-- [neural](./demo/neural.py)
-- [learning rate](./demo/learning_rate.py)
-- [fitting](./demo/fitting.py)
-- [mnist](./demo/mnist.py)
-- [cnn](./demo/cnn.py)
+- [neural](./demo/deep-neural.py)
+- [learning rate](./demo/deep-learning_rate.py)
+- [fitting](./demo/deep-fitting.py)
+- [mnist](./demo/deep-mnist.py)
+- [cnn](./demo/deep-cnn.py)
