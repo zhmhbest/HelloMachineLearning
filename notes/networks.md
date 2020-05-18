@@ -6,3 +6,7 @@
 
 [TOC]
 
+## 第一个神经网络
+
+>完整代码详见[`demo-HelloNeuralNetworks.py`](../src/demo-HelloNeuralNetworks.py)
+
