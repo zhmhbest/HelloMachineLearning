@@ -12,7 +12,7 @@
       
       
       
-      
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.7.0/flowchart.min.js"></script>
       
 
       <style>
@@ -271,14 +271,84 @@ pre[data-line] .line-highlight[data-end]:after {
 <ul>
 <li><a href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9Cindexhtml">&#x795E;&#x7ECF;&#x7F51;&#x7EDC;</a>
 <ul>
-<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C">&#x7B2C;&#x4E00;&#x4E2A;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;</a></li>
+<li><a href="#hello">Hello</a></li>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E7%8E%87">&#x5B66;&#x4E60;&#x7387;</a></li>
+<li><a href="#%E6%8B%9F%E5%90%88">&#x62DF;&#x5408;</a></li>
+<li><a href="#%E6%BB%91%E5%8A%A8%E5%B9%B3%E5%9D%87%E6%A8%A1%E5%9E%8B">&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;</a></li>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E5%A4%8D%E7%94%A8">&#x6A21;&#x578B;&#x590D;&#x7528;</a></li>
 </ul>
 </li>
 </ul>
-<h2 class="mume-header" id="%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C">&#x7B2C;&#x4E00;&#x4E2A;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;</h2>
+<h2 class="mume-header" id="hello">Hello</h2>
 
 <blockquote>
-<p>&#x5B8C;&#x6574;&#x4EE3;&#x7801;&#x8BE6;&#x89C1;<a href="../src/demo-HelloNeuralNetworks.py"><code>demo-HelloNeuralNetworks.py</code></a></p>
+<p><a href="../src/demo-HelloNeuralNetworks.py"><code>demo-HelloNeuralNetworks.py</code></a></p>
+</blockquote>
+<div class="flow">st=&gt;start: &#x5F00;&#x59CB;
+config=&gt;inputoutput: &#x53C2;&#x6570;&#x8BBE;&#x7F6E;
+networks=&gt;operation: &#x5B9A;&#x4E49;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;
+loss=&gt;operation: &#x5B9A;&#x4E49;&#x635F;&#x5931;&#x51FD;&#x6570;
+optimizer=&gt;operation: &#x5B9A;&#x4E49;&#x4F18;&#x5316;&#x5668;
+training=&gt;operation: &#x8BAD;&#x7EC3;
+ed=&gt;end: &#x7ED3;&#x675F;
+
+st-&gt;config-&gt;networks-&gt;loss-&gt;optimizer-&gt;training-&gt;ed
+</div><h2 class="mume-header" id="%E5%AD%A6%E4%B9%A0%E7%8E%87">&#x5B66;&#x4E60;&#x7387;</h2>
+
+<blockquote>
+<p><a href="../src/demo-LearningRate.py"><code>demo-LearningRate.py</code></a></p>
+</blockquote>
+<p>&#x5B66;&#x4E60;&#x7387;&#x65E2;&#x4E0D;&#x80FD;&#x8FC7;&#x5927;&#xFF0C;&#x4E5F;&#x4E0D;&#x80FD;&#x8FC7;&#x5C0F;&#x3002; &#x8FC7;&#x5C0F;&#xFF1A;&#x8BAD;&#x7EC3;&#x901F;&#x5EA6;&#x6162;&#xFF1B;&#x8FC7;&#x5927;&#xFF1A;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x6A21;&#x578B;&#x9707;&#x8361;&#x3002;</p>
+<p><strong>&#x6307;&#x6570;&#x8870;&#x51CF;&#x6CD5;</strong>&#x5219;&#x53EF;&#x5F88;&#x597D;&#x7684;&#x89E3;&#x51B3;&#x4E0A;&#x8FF0;&#x95EE;&#x9898;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token triple-quoted-string string">&quot;&quot;&quot;
+learning_rate = initial_learning_rate * decay_rate ^ (global_step / decay_steps)
+    learning_rate        : &#x6BCF;&#x8F6E;&#x5B9E;&#x9645;&#x4F7F;&#x7528;&#x7684;&#x5B66;&#x4E60;&#x7387;
+    initial_learning_rate: &#x521D;&#x59CB;&#x5B66;&#x4E60;&#x7387;
+    global_step          : tf.Variable(0, trainable=False)
+    decay_steps          : &#x8870;&#x51CF;&#x901F;&#x5EA6;
+    decay_rate           : &#x8870;&#x51CF;&#x7CFB;&#x6570;
+    staircase            : &#x662F;&#x5426;&#x4EE5;&#x79BB;&#x6563;&#x95F4;&#x9694;&#x8870;&#x51CF;&#x5B66;&#x4E60;&#x901F;&#x7387;
+
+global_step&#x4E3A;&#x56FA;&#x5B9A;&#x5199;&#x6CD5;&#xFF0C;&#x7528;&#x4EE5;&#x8BB0;&#x5F55;&#x8BAD;&#x7EC3;&#x6B21;&#x6570;
+staircase&#x4E3A;&#x771F;&#x65F6;(global_step / decay_steps)&#x7684;&#x503C;&#x4F1A;&#x88AB;&#x8F6C;&#x5316;&#x4E3A;&#x6574;&#x6570;
+&quot;&quot;&quot;</span>
+decayed_learning_rate <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>exponential_decay<span class="token punctuation">(</span>
+    initial_learning_rate<span class="token punctuation">,</span>
+    global_step<span class="token punctuation">,</span>
+    decay_steps<span class="token punctuation">,</span>
+    decay_rate<span class="token punctuation">,</span>
+    staircase<span class="token operator">=</span><span class="token boolean">False</span>
+<span class="token punctuation">)</span>
+</pre><h2 class="mume-header" id="%E6%8B%9F%E5%90%88">&#x62DF;&#x5408;</h2>
+
+<blockquote>
+<p><a href="../src/demo-Fitting.py"><code>demo-Fitting.py</code></a></p>
+</blockquote>
+<p>&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x5316;&#x907F;&#x514D;&#x8FC7;&#x62DF;&#x5408;&#x3002;</p>
+<h2 class="mume-header" id="%E6%BB%91%E5%8A%A8%E5%B9%B3%E5%9D%87%E6%A8%A1%E5%9E%8B">&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;</h2>
+
+<blockquote>
+<p><a href="../src/demo-Mnist.py"><code>demo-Mnist.py</code></a></p>
+</blockquote>
+<p>&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x7528;&#x6765;&#x4F30;&#x8BA1;&#x53D8;&#x91CF;&#x7684;&#x5C40;&#x90E8;&#x5747;&#x503C;&#xFF0C;&#x4F7F;&#x5F97;&#x53D8;&#x91CF;&#x7684;&#x66F4;&#x65B0;&#x4E0E;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x5386;&#x53F2;&#x53D6;&#x503C;&#x6709;&#x5173;&#x3002;<br>
+&#x5728;&#x91C7;&#x7528;&#x968F;&#x673A;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7B97;&#x6CD5;&#x8BAD;&#x7EC3;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x65F6;&#xFF0C;&#x4F7F;&#x7528;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x5728;&#x4E00;&#x5B9A;&#x7A0B;&#x5EA6;&#x63D0;&#x9AD8;&#x6700;&#x7EC8;&#x6A21;&#x578B;&#x5728;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#x4E0A;&#x7684;&#x8868;&#x73B0;&#x3002;</p>
+<p>&#x8BE5;&#x6A21;&#x578B;&#x4F1A;&#x7EF4;&#x62A4;&#x4E00;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#xFF08;shadow variable&#xFF09;&#xFF0C;&#x8FD9;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#x5C31;&#x662F;&#x76F8;&#x5E94;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#xFF0C;&#x6BCF;&#x6B21;&#x8FD0;&#x884C;&#x65F6;&#xFF0C;&#x4F1A;&#x5BF9;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x503C;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x3002;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token triple-quoted-string string">&quot;&quot;&quot;
+shadow_variable = decay * shadow_variable + (1 - decay) * variable
+    decay:                  &#x8870;&#x51CF;&#x7387;&#xFF0C;&#x51B3;&#x5B9A;&#x66F4;&#x65B0;&#x901F;&#x5EA6;&#xFF08;&#x4E00;&#x822C;&#x4E3A;0.999&#x6216;0.9999&#xFF09;
+    shadow_variable:        &#x5F71;&#x5B50;&#x53D8;&#x91CF;
+    variable:               &#x5F85;&#x66F4;&#x65B0;&#x7684;&#x53D8;&#x91CF;
+&quot;&quot;&quot;</span>
+
+ema <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>ExponentialMovingAverage<span class="token punctuation">(</span>decay<span class="token operator">=</span>&#x8870;&#x51CF;&#x7387;<span class="token punctuation">,</span> num_updates<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span>
+    <span class="token comment"># num_updates(optional):  &#x52A8;&#x6001;&#x8BBE;&#x7F6E;decay&#x5927;&#x5C0F;</span>
+    <span class="token comment"># decay = min(decay, (1+num_updates)/(10+num_updates))</span>
+x <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> weight<span class="token punctuation">)</span> <span class="token operator">+</span> biases<span class="token punctuation">)</span>
+x <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>weight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>biases<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><h2 class="mume-header" id="%E6%A8%A1%E5%9E%8B%E5%A4%8D%E7%94%A8">&#x6A21;&#x578B;&#x590D;&#x7528;</h2>
+
+<blockquote>
+<p><a href="../src/demo-ModelReuse.py"><code>demo-ModelReuse.py</code></a></p>
 </blockquote>
 
       </div>
@@ -289,7 +359,20 @@ pre[data-line] .line-highlight[data-end]:after {
     
     
     
-    
+    <script>
+var flowcharts = document.getElementsByClassName('flow')
+for (var i = 0; i < flowcharts.length; i++) {
+  var flow = flowcharts[i]
+  try {
+    var diagram = flowchart.parse(flow.textContent)
+    flow.id = 'flow_' + i
+    flow.innerHTML = ''
+    diagram.drawSVG(flow.id)
+  } catch (error) {
+    flow.innerHTML = '<pre class="language-text">' + error.toString() + '</pre>'
+  }
+}
+</script>
     
     
   

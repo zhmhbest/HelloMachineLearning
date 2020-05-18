@@ -19,7 +19,7 @@ DATASET_SIZE = 128
         ↘
             y
         ↗
-    x2 
+    x2
 """
 DATA_X, DATA_Y = generate_random_data(DATASET_SIZE, 2, 1)
 
@@ -54,7 +54,7 @@ cross_entropy = -tf.reduce_mean(
 )
 loss = cross_entropy
 # 优化器
-train_adam = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss)
+train_op = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss)
 
 
 """
@@ -72,7 +72,7 @@ with tf.Session() as sess:
     # 训练模型
     for i in range(1, 1 + TRAIN_TIMES):
         batch_X, batch_Y = next_batch(DATA_X, DATA_Y, i, DATASET_SIZE, BATCH_SIZE)
-        sess.run(train_adam, feed_dict={
+        sess.run(train_op, feed_dict={
             input_x: batch_X,
             input_y: batch_Y
         })

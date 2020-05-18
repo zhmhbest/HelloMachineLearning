@@ -11,9 +11,19 @@
 
 ## [Tensorflow入门](./tf.html)
 
+### [Tensor](./tf.html#tensor)
+
+### [Session](./tf.html#session)
+
+### [Variable](./tf.html#variable)
+
+### [Graph](./tf.html#graph)
+
+### [TensorBoard](./tf.html#tensorboard)
+
 ## [神经网络](./networks.html)
 
-## [Keras入门](./keras.html)
+<!-- ## [Keras入门](./keras.html) -->
 
 ## [卷积网络](./cnn.html)
 
