@@ -1,21 +1,22 @@
-# Hello Tensorflow
+# HelloTensorflow
 
 - [View Notes](https://zhmhbest.github.io/HelloTensorflow/notes)
+- [View Repository](https://github.com/zhmhbest/HelloTensorflow)
 
 ## 基础知识
 
-- [hello](./demo-hello.py)
-- [tensor](./demo-tensor.py)
-- [session](./demo-session.py)
-- [variable](./demo-variable.py)
-- [graph](./demo-graph.py)
-- [board](./demo-board.py)
+- [hello](./demo/demo-hello.py)
+- [tensor](./demo/demo-tensor.py)
+- [session](./demo/demo-session.py)
+- [variable](./demo/demo-variable.py)
+- [graph](./demo/demo-graph.py)
+- [board](./demo/demo-board.py)
 
 ## 神经网络
 
-- [neural](./demo-neural.py)
-- [learning rate](./demo-learning_rate.py)
-- [model reuse](./demo-model_reuse.py)
-- [fitting](./demo-fitting.py)
-- [mnist](./demo-mnist.py)
-- [cnn](./demo-cnn.py)
+- [neural](./demo/demo-neural.py)
+- [learning rate](./demo/demo-learning_rate.py)
+- [model reuse](./demo/demo-model_reuse.py)
+- [fitting](./demo/demo-fitting.py)
+- [mnist](./demo/demo-mnist.py)
+- [cnn](./demo/demo-cnn.py)
