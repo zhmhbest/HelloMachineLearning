@@ -1,11 +1,9 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
-# CNN
+# [CNN](./index.html)
 
-## [Hello](./hello.py)
-
-- 初识卷积
+## [初识卷积](./hello.py)
 
 ![](images/cnn.png)
 
@@ -17,7 +15,7 @@
 
 **过滤器的参数深度**与输入数据深度是一致的。
 
-![](images/convolution.png)
+![](images/cnn_convolution.png)
 
 - **过滤器尺寸**：输入节点矩阵的大小，一般为`3×3`、`5×5`。
 - **过滤器深度**：输出单位节点矩阵的深度。
@@ -28,7 +26,7 @@ $$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + bias\right)$$
 
 过滤器每层与输入数据每层求内积并计算和最后加上偏置项就得到输出矩阵上的一个点。
 
-![](images/filter.png)
+![](images/cnn_filter.png)
 
 #### 输出大小
 
@@ -49,19 +47,19 @@ $$ReLU\left((\sum\limits_{i=1}^{deep} area_i \cdot filter_i) + bias\right)$$
 
 #### 最大值法
 
-![](images/pool_max.png)
+![](images/cnn_pool-max.png)
 
 ## LeNet-5
 
 - 串联卷积
 
-![](images/lenet-5.png)
+![](images/cnn_lenet-5.png)
 
 ## Inception-v3
 
 - 并联卷积
 
-![](images/inception.png)
+![](images/cnn_inception.png)
 
 ## 迁移学习
 
