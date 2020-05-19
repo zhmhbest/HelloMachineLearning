@@ -7,6 +7,8 @@
 
 ## [初识卷积](./hello.py)
 
+>[`demo-CNN.py`](../src/demo-CNN.py)
+
 ![](images/cnn.png)
 
 ### 卷积层（Convolution）
