@@ -1,7 +1,9 @@
 import tensorflow as tf
-from zhmh.tf import TensorBoard
+from zhmh.tf import TensorBoard, force_use_cpu
+from zhmh.tf.losses import cross_entropy
 from zhmh.tf.data import generate_random_data, next_batch
 board = TensorBoard()
+force_use_cpu()
 
 
 """
@@ -39,20 +41,9 @@ w2 = tf.Variable(tf.random_normal([3, 1], stddev=1, seed=1, name='init_w2'), nam
 a = tf.matmul(input_x, w1, name='a')
 y = tf.matmul(a, w2, name='y')
 
+# 损失函数
+loss = tf.reduce_mean(cross_entropy(input_y, y))
 
-"""
-    交叉熵（Cross-Entropy）
-    - tf.clip_by_value: 将一个张量中的数值限制在一个范围之内。
-    - tf.log: 对张量中所有元素依次求对数
-    - *: 矩阵对应位置直接相乘
-    - matmul: 矩阵乘法
-"""
-cross_entropy = -tf.reduce_mean(
-    input_y * tf.log(tf.clip_by_value(y, 1e-10, 1.0)) +
-    (1 - input_y) * tf.log(tf.clip_by_value(1 - y, 1e-10, 1.0)),
-    name='cross_entropy'
-)
-loss = cross_entropy
 # 优化器
 train_op = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss)
 

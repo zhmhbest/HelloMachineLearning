@@ -21,6 +21,12 @@
 
 ### [TensorBoard](./tf.html#tensorboard)
 
+### [Activate](./tf.html#activate)
+
+### [Loss](./tf.html#loss)
+
+### [Optimizer](./tf.html#optimizer)
+
 ## [神经网络](./networks.html)
 
 <!-- ## [Keras入门](./keras.html) -->

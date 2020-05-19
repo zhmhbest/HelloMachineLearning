@@ -416,3 +416,219 @@ with tf.Session() as sess:
     tb.save(sess.graph)
 tb.board()
 ```
+
+## Activate
+
+将非线性特性引入到我们的网络中。
+
+### Sigmoid
+
+$$f(x) = \dfrac{1}{1 + e^{-x}}$$
+
+```py
+tf.nn.sigmoid(x)
+```
+
+### Tanh
+
+$$f(x) = \dfrac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$$
+
+```py
+tf.nn.tanh(x)
+```
+
+### ReLU
+
+$$f(x) = \max(0, x)$$
+
+```py
+tf.nn.relu(x)
+```
+
+## Loss
+
+### 回归问题
+
+**测试数据**
+
+```py
+y_true = tf.constant([
+    12, 23, 94, 37
+], dtype=tf.float32, name='y_true')  # mean=41.5
+
+y_pred = tf.constant([
+    24, 32, 66, 53
+], dtype=tf.float32, name='y_pred')  # mean=43.75
+```
+
+#### 均方误差（MSE）
+
+- 优点是便于梯度下降，误差大时下降快，误差小时下降慢，有利于函数收敛。
+- 缺点是受明显偏离正常范围的离群样本的影响较大
+
+```py
+loss_mse1 = tf.losses.mean_squared_error(y_true, y_pred)
+loss_mse2 = tf.reduce_mean(tf.square(y_true - y_pred))
+
+with tf.Session().as_default():
+    print(loss_mse1.eval())
+    print(loss_mse2.eval())
+```
+
+#### 平均绝对误差（MAE）
+
+- 优点是其克服了MSE的缺点，受偏离正常范围的离群样本影响较小。
+- 缺点是收敛速度比MSE慢，因为当误差大或小时其都保持同等速度下降，而且在某一点处还不可导，计算机求导比较困难。
+
+```py
+loss_mae1 = tf.reduce_sum(tf.losses.absolute_difference(y_true, y_pred))
+loss_mae2 = tf.reduce_sum(tf.reduce_mean(tf.abs(y_pred - y_true)))
+
+with tf.Session().as_default():
+    print(loss_mae1.eval())
+    print(loss_mae2.eval())
+```
+
+#### Huber
+
+>[Sklearn关于Huber的文档](https://scikit-learn.org/stable/modules/linear_model.html#huber-regression)中建议将$δ=1.35$以达到$95\%$的有效性。
+
+![](./images/loss_huber.gif)
+
+$$
+\min_{w, \sigma} {\sum_{i=1}^n\left(\sigma + H_{\epsilon}\left(\frac{X_{i}w - y_{i}}{\sigma}\right)\sigma\right) + \alpha {||w||_2}^2}
+$$
+
+$$
+H_{\epsilon}(z) = \begin{cases}
+       z^2, & \text {if } |z| < \epsilon, \\
+       2\epsilon|z| - \epsilon^2, & \text{otherwise}
+\end{cases}
+$$
+
+检测真实值（y_true）和预测值（y_pred）之差的绝对值在超参数δ内时，使用MSE来计算loss,在δ外时使用MAE计算loss。
+
+```py
+loss_huber = tf.reduce_sum(tf.losses.huber_loss(y_true, y_pred))
+
+with tf.Session().as_default():
+    print(loss_huber.eval())
+```
+
+### 分类问题
+
+**测试数据**
+
+```py
+y_true = tf.constant([
+    1, 1, 0, 0, 1
+], dtype=tf.float32, name='y_true')
+
+y_pred = tf.constant([
+    1, 1, 0, 1, 1
+], dtype=tf.float32, name='y_pred')
+```
+
+#### Cross Entropy
+
+```py
+def cross_entropy(labels, predictions, epsilon=1e-7):
+    return -(
+            labels * tf.log(tf.clip_by_value(predictions, epsilon, 1.0))
+            +
+            (1 - labels) * tf.log(tf.clip_by_value(1 - predictions, epsilon, 1.0))
+    )
+```
+
+```py
+loss1 = tf.reduce_mean(tf.losses.log_loss(y_true, y_pred))
+loss2 = tf.reduce_mean(cross_entropy(y_true, y_pred))
+
+
+with tf.Session().as_default():
+    print(loss1.eval())
+    print(loss2.eval())
+```
+
+#### Sigmoid Cross Entropy
+
+```py
+loss1 = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true, logits=y_pred))
+# tf.nn.sigmoid(y_pred) = 1.0/(1+tf.exp(-y_pred)
+loss2 = tf.reduce_mean(tf.losses.log_loss(y_true, tf.nn.sigmoid(y_pred)))
+
+with tf.Session().as_default():
+    print(loss1.eval())
+    print(loss2.eval())
+```
+
+## Optimizer
+
+>[参考资料](https://ruder.io/optimizing-gradient-descent/index.html)
+
+![](./images/optimizer1.gif)
+![](./images/optimizer2.gif)
+
+<!-- https://blog.csdn.net/u010089444/article/details/76725843 -->
+
+### StochasticGradientDescent（SGD）
+
+每读入一个数据，便立刻计算Loss的梯度来更新参数。
+
+- **优点**：有几率跳出局部最优。
+- **缺点**：可能被困在鞍点（此点处代价震荡）。
+
+```py
+train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss_function)
+```
+
+### Momentum
+
+模拟物体运动时的惯性，即更新的时候在一定程度上保留之前更新的方向。
+
+```py
+train_op = tf.train.MomentumOptimizer(learning_rate, momentum=0.9).minimize(loss_function)
+```
+
+### Nesterov Accelerated Gradient（NAG）
+
+我们希望有一个更聪明的球，它知道在山坡再次变缓之前会减速。
+
+```py
+# None
+```
+
+### Adagrad
+
+可以使学习速率适应参数，对低频特征做较大更新，对高频的做较小更新。
+
+- **优点**：无需手动调整学习速度。在稀疏数据上的表现优异。
+- **缺点**：分母会不断积累，导致学习率急速下降并快速趋近于零。
+
+```py
+train_op = tf.train.AdagradOptimizer(learning_rate, initial_accumulator_value=0.01).minimize(loss_function)
+```
+
+### Adadelta
+
+是对Adagrad的改进，Adadelta不会累计过去所有的平方梯度，历史梯度的积累将会被限制在某个固定大小，从而避免学习率的急速下降。该算法甚至不需要设置默认学习率。
+
+```py
+train_op = tf.train.AdadeltaOptimizer(rho=0.95).minimize(loss_function)
+```
+
+### RMSProp
+
+RMSprop和Adadelta都是为了解决Adagrad学习率急剧下降问题的。
+
+```py
+train_op = tf.train.RMSPropOptimizer(learning_rate=0.001, decay=0.9).minimize(loss_function)
+```
+
+### Adam
+
+相当于RMSprop + Momentum，训练过程就像是一个带有摩擦的沉重的球。
+
+```py
+train_op = tf.train.AdamOptimizer(learning_rate, beta1=0.9, beta2=0.999, epsilon=1e-8).minimize(loss_function)
+```
