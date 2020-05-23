@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 
-# [深度学习](https://github.com/zhmhbest/HelloTensorflow)
+# [深度学习](https://github.com/zhmhbest/HelloDeepLearnin)
 
 ## 序
 
