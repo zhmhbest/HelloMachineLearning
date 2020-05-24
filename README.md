@@ -1,4 +1,4 @@
-# HelloDeepLearnin
+# HelloDeepLearning
 
-- [View Notes](https://zhmhbest.github.io/HelloDeepLearnin/notes)
-- [View Repository](https://github.com/zhmhbest/HelloDeepLearnin)
+- [View Notes](https://zhmhbest.github.io/HelloDeepLearning/notes)
+- [View Repository](https://github.com/zhmhbest/HelloDeepLearning)
