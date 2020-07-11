@@ -1,13 +1,13 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
-# [神经网络](./index.html)
+# [神经网络](../index.html)
 
 [TOC]
 
 ## Hello
 
->[`demo-HelloNeuralNetworks.py`](../src/demo-HelloNeuralNetworks.py)
+>[`demo-HelloNeuralNetworks.py`](./src/demo-HelloNeuralNetworks.py)
 
 ```flow
 st=>start: 开始
@@ -23,7 +23,7 @@ st->config->networks->loss->optimizer->training->ed
 
 ## 学习率
 
->[`demo-LearningRate.py`](../src/demo-LearningRate.py)
+>[`demo-LearningRate.py`](./src/demo-LearningRate.py)
 
 学习率既不能过大，也不能过小。 过小：训练速度慢；过大：可能导致模型震荡。
 
@@ -53,13 +53,13 @@ decayed_learning_rate = tf.train.exponential_decay(
 
 ## 拟合
 
->[`demo-Fitting.py`](../src/demo-Fitting.py)
+>[`demo-Fitting.py`](./src/demo-Fitting.py)
 
 使用正则化避免过拟合。
 
 ## 滑动平均模型
 
->[`demo-Mnist.py`](../src/demo-Mnist.py)
+>[`demo-Mnist.py`](./src/demo-Mnist.py)
 
 滑动平均模型用来估计变量的局部均值，使得变量的更新与一段时间内的历史取值有关。
 在采用随机梯度下降算法训练神经网络时，使用滑动平均模型可以在一定程度提高最终模型在测试数据上的表现。
@@ -83,5 +83,4 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 
 ## 模型复用
 
->[`demo-ModelReuse.py`](../src/demo-ModelReuse.py)
-
+>[`demo-ModelReuse.py`](./src/demo-ModelReuse.py)

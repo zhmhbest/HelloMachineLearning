@@ -1,13 +1,13 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
-# [CNN](./index.html)
+# [CNN](../index.html)
 
 [TOC]
 
-## [初识卷积](./hello.py)
+## [初识卷积](../hello.py)
 
->[`demo-CNN.py`](../src/demo-CNN.py)
+>[`demo-CNN.py`](./src/demo-CNN.py)
 
 ![](images/cnn.png)
 

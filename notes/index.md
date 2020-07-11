@@ -10,26 +10,28 @@
 - [`Tensorflow`](https://tensorflow.google.cn/)是一个端到端开源机器学习平台。
 - [`Keras`](https://keras.io/)是一个用Python编写的高级神经网络API，它能够以TensorFlow作为后端运行。
 
-## [Tensorflow入门](./tf.html)
+## Tensorflow
 
-### [Tensor](./tf.html#tensor)
+### [Tensorflow入门](./tensorflow/tf.html)
 
-### [Session](./tf.html#session)
+#### [Tensor](./tensorflow/tf.html#tensor)
 
-### [Variable](./tf.html#variable)
+#### [Session](./tensorflow/tf.html#session)
 
-### [Graph](./tf.html#graph)
+#### [Variable](./tensorflow/tf.html#variable)
 
-### [TensorBoard](./tf.html#tensorboard)
+#### [Graph](./tensorflow/tf.html#graph)
 
-### [Activate](./tf.html#activate)
+#### [TensorBoard](./tensorflow/tf.html#tensorboard)
 
-### [Loss](./tf.html#loss)
+#### [Activate](./tensorflow/tf.html#activate)
 
-### [Optimizer](./tf.html#optimizer)
+#### [Loss](./tensorflow/tf.html#loss)
 
-## [神经网络](./networks.html)
+#### [Optimizer](./tensorflow/tf.html#optimizer)
 
-## [卷积网络](./cnn.html)
+### [神经网络](./tensorflow/networks.html)
 
-## [Keras入门](./keras/index.html)
+### [卷积网络](./tensorflow/cnn.html)
+
+## [Keras](./keras/index.html)
