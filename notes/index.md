@@ -8,7 +8,7 @@
 - 实践本知识前，请确保已有一定的[机器学习知识](http://zhmhbest.gitee.io/hellomathematics/notes/MachineLearning/index.html)储备。
 - 请确保已经搭建完成[GPU运算环境](https://zhmhbest.github.io/HelloCUDA/)。
 - [`Tensorflow`](https://tensorflow.google.cn/)是一个端到端开源机器学习平台。
-- [`Keras`](https://keras.io/)是一个用Python编写的高级神经网络API，它能够以TensorFlow作为后端运行。
+- [`Keras`](https://keras.io/)是一个用Python编写的高级神经网络API，它能够以TensorFlow（或Theano、CNTK）作为后端运行。
 
 ## Tensorflow
 

@@ -11,7 +11,7 @@
       
       
       
-      
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.7.0/flowchart.min.js"></script>
       
       <style>
       /**
@@ -266,8 +266,35 @@ pre[data-line] .line-highlight[data-end]:after {
 <h1 class="mume-header" id="keras%E5%85%A5%E9%97%A8indexhtml"><a href="./index.html">Keras&#x5165;&#x95E8;</a></h1>
 
 <ul>
-<li><a href="#keras%E5%85%A5%E9%97%A8indexhtml">Keras&#x5165;&#x95E8;</a></li>
+<li><a href="#keras%E5%85%A5%E9%97%A8indexhtml">Keras&#x5165;&#x95E8;</a>
+<ul>
+<li><a href="#hello">Hello</a></li>
 </ul>
+</li>
+</ul>
+<h2 class="mume-header" id="hello">Hello</h2>
+
+<blockquote>
+<p><a href="https://keras.io/api/">Keras API</a></p>
+</blockquote>
+<div class="flow">st=&gt;start: &#x5F00;&#x59CB;
+
+data=&gt;inputoutput: &#x6570;&#x636E;&#x8F7D;&#x5165;
+preprocessing=&gt;operation: &#x6570;&#x636E;&#x9884;&#x5904;&#x7406;
+
+model=&gt;operation: &#x6A21;&#x578B;&#x5B9A;&#x4E49;
+compile=&gt;operation: &#x6A21;&#x578B;&#x7F16;&#x8BD1;
+training=&gt;operation: &#x6A21;&#x578B;&#x8BAD;&#x7EC3;
+assessment=&gt;operation: &#x6A21;&#x578B;&#x8BC4;&#x4F30;
+
+predict=&gt;operation: &#x9884;&#x6D4B;
+save=&gt;operation: &#x4FDD;&#x5B58;&#x6A21;&#x578B;
+ed=&gt;end: &#x7ED3;&#x675F;
+
+st-&gt;data-&gt;preprocessing-&gt;model-&gt;compile-&gt;training-&gt;assessment-&gt;predict-&gt;save-&gt;ed
+</div><blockquote>
+<p><a href="./src/demo-hello.py"><code>demo-hello.py</code></a></p>
+</blockquote>
 
       </div>
       
@@ -277,7 +304,20 @@ pre[data-line] .line-highlight[data-end]:after {
     
     
     
-    
+    <script>
+var flowcharts = document.getElementsByClassName('flow')
+for (var i = 0; i < flowcharts.length; i++) {
+  var flow = flowcharts[i]
+  try {
+    var diagram = flowchart.parse(flow.textContent)
+    flow.id = 'flow_' + i
+    flow.innerHTML = ''
+    diagram.drawSVG(flow.id)
+  } catch (error) {
+    flow.innerHTML = '<pre class="language-text">' + error.toString() + '</pre>'
+  }
+}
+</script>
     
     
   
