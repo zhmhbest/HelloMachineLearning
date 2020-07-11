@@ -30,7 +30,6 @@
 
 ## [神经网络](./networks.html)
 
-<!-- ## [Keras入门](./keras.html) -->
-
 ## [卷积网络](./cnn.html)
 
+## [Keras入门](./keras/index.html)
