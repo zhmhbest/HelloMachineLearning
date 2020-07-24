@@ -420,6 +420,34 @@ tb.board()
 
 将非线性特性引入到我们的网络中。
 
+```py
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(-10, 10)
+y_sigmoid = 1 / (1 + np.exp(-x))
+y_tanh = (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
+y_relu = np.array([0 if item < 0 else item for item in x])
+alpha_relu = 0.2
+y_leaky_relu = np.array([alpha_relu * item if item < 0 else item for item in x])
+alpha_elu = 0.7
+y_elu = np.array([alpha_elu*(np.exp(item)-1) if item < 0 else item for item in x])
+
+plt.figure(dpi=600)
+
+plt.plot(x, 8+y_sigmoid, label='Sigmod (+8)')
+plt.plot(x, 6+y_tanh, label='Tanh (+6)')
+plt.plot(x, 4+y_relu, label='Relu (+4)')
+plt.plot(x, 2+y_leaky_relu, label='Leaky Relu (+2)')
+plt.plot(x, 0+y_elu, label='Elu (+0)')
+
+plt.grid()
+plt.legend()
+plt.show()
+```
+
+![activate](./images/activate.png)
+
 ### Sigmoid
 
 $$f(x) = \dfrac{1}{1 + e^{-x}}$$
@@ -444,6 +472,30 @@ $$f(x) = \max(0, x)$$
 tf.nn.relu(x)
 ```
 
+### Leaky ReLU
+
+$$f(x) = \begin{cases}
+    x   & x≥0
+\\  αx  & x<0
+\end{cases}$$
+
+```py
+tf.nn.leaky_relu(x, alpha=0.2)
+```
+
+### ELU
+
+$$f(x) = \begin{cases}
+    x           & x≥0
+\\  α(e^x-1)    & x<0
+\end{cases}$$
+
+- $α$：ELU负值部分在何时饱和。
+
+```py
+tf.nn.elu(x, alpha=0.2)
+```
+
 ## Loss
 
 ### 回归问题
@@ -462,6 +514,8 @@ y_pred = tf.constant([
 
 #### 均方误差（MSE）
 
+$$\mathrm{MSE}(y, f(x)) = \dfrac{\sum\limits_{i=1}^{n}(y_i-f(x_i))^2}{n}$$
+
 - 优点是便于梯度下降，误差大时下降快，误差小时下降慢，有利于函数收敛。
 - 缺点是受明显偏离正常范围的离群样本的影响较大
 
@@ -475,6 +529,8 @@ with tf.Session().as_default():
 ```
 
 #### 平均绝对误差（MAE）
+
+$$\mathrm{MAE}(y, f(x)) = \dfrac{\sum\limits_{i=1}^{n}|y_i-f(x_i)|}{n}$$
 
 - 优点是其克服了MSE的缺点，受偏离正常范围的离群样本影响较小。
 - 缺点是收敛速度比MSE慢，因为当误差大或小时其都保持同等速度下降，而且在某一点处还不可导，计算机求导比较困难。
@@ -492,20 +548,14 @@ with tf.Session().as_default():
 
 >[Sklearn关于Huber的文档](https://scikit-learn.org/stable/modules/linear_model.html#huber-regression)中建议将$δ=1.35$以达到$95\%$的有效性。
 
+$$L_σ(y, f(x)) = \begin{cases}
+    \dfrac{1}{2}(y-f(x))^2    & |y-f(x)|≤σ
+\\  σ(|y-f(x)|-\dfrac{1}{2}σ) & otherwise
+\end{cases}$$
+
 ![](./images/loss_huber.gif)
 
-$$
-\min_{w, \sigma} {\sum_{i=1}^n\left(\sigma + H_{\epsilon}\left(\frac{X_{i}w - y_{i}}{\sigma}\right)\sigma\right) + \alpha {||w||_2}^2}
-$$
-
-$$
-H_{\epsilon}(z) = \begin{cases}
-       z^2, & \text {if } |z| < \epsilon, \\
-       2\epsilon|z| - \epsilon^2, & \text{otherwise}
-\end{cases}
-$$
-
-检测真实值（y_true）和预测值（y_pred）之差的绝对值在超参数δ内时，使用MSE来计算loss,在δ外时使用MAE计算loss。
+检测真实值和预测值之差的绝对值在超参数δ内时，使用MSE来计算loss,在δ外时使用MAE计算loss。
 
 ```py
 loss_huber = tf.reduce_sum(tf.losses.huber_loss(y_true, y_pred))
@@ -529,6 +579,8 @@ y_pred = tf.constant([
 ```
 
 #### Cross Entropy
+
+$$\mathrm{CEH}(p, q) = -\sum_{x∈X} p(x)\log q(x)$$
 
 ```py
 def cross_entropy(labels, predictions, epsilon=1e-7):
