@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
-# [Keras入门](./index.html)
+# [Keras](../index.html)
 
 [TOC]
 
@@ -27,5 +27,7 @@ ed=>end: 结束
 st->data->preprocessing->model->compile->training->assessment->predict->save->ed
 ```
 
->[`demo-hello.py`](./src/demo-hello.py)
+@import "./src/demo-hello.py"
 
+<!-- >[`demo-hello.py`](./src/demo-hello.py)
+ -->

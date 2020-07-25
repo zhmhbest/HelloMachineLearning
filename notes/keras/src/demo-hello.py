@@ -11,8 +11,22 @@ from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import adam
 from keras.callbacks import EarlyStopping
 from keras.utils import np_utils
-from zhmh import make_dump
-make_dump('./dump')  # 创建缓存目录
+
+
+def make_dump(dump_path):
+    """
+    创建缓存目录
+    """
+    import os
+    if os.path.exists(dump_path):
+        if not os.path.isdir(dump_path):
+            print(dump_path, "is not a valid path.")
+            exit(1)
+    else:
+        os.mkdir(dump_path)
+
+
+make_dump('./dump')
 
 
 # 【数据载入】
@@ -108,7 +122,7 @@ model.save("./dump/model.h5")
 """【模型结构、模型参数、优化器参数】
     # 保存
     model.save("./dump/model.h5")
-    
+
     # 加载
     model = load_model("./dump/model.h5")
 """

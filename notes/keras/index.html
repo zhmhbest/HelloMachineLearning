@@ -263,10 +263,10 @@ pre[data-line] .line-highlight[data-end]:after {
       <div class="mume markdown-preview  ">
       <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
-<h1 class="mume-header" id="keras%E5%85%A5%E9%97%A8indexhtml"><a href="./index.html">Keras&#x5165;&#x95E8;</a></h1>
+<h1 class="mume-header" id="kerasindexhtml"><a href="../index.html">Keras</a></h1>
 
 <ul>
-<li><a href="#keras%E5%85%A5%E9%97%A8indexhtml">Keras&#x5165;&#x95E8;</a>
+<li><a href="#kerasindexhtml">Keras</a>
 <ul>
 <li><a href="#hello">Hello</a></li>
 </ul>
@@ -292,10 +292,160 @@ save=&gt;operation: &#x4FDD;&#x5B58;&#x6A21;&#x578B;
 ed=&gt;end: &#x7ED3;&#x675F;
 
 st-&gt;data-&gt;preprocessing-&gt;model-&gt;compile-&gt;training-&gt;assessment-&gt;predict-&gt;save-&gt;ed
-</div><blockquote>
-<p><a href="./src/demo-hello.py"><code>demo-hello.py</code></a></p>
-</blockquote>
+</div><pre data-role="codeBlock" data-info="py" class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> cifar10
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>models <span class="token keyword">import</span> Sequential<span class="token punctuation">,</span> load_model<span class="token punctuation">,</span> model_from_json
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>layers<span class="token punctuation">.</span>core <span class="token keyword">import</span> Dense<span class="token punctuation">,</span> Dropout<span class="token punctuation">,</span> Activation
+<span class="token triple-quoted-string string">&quot;&quot;&quot;
+    Dense       : &#x7528;&#x4E8E;&#x521B;&#x5EFA;&#x5BC6;&#x96C6;&#x795E;&#x7ECF;&#x5143;
+    Dropout     : &#x7528;&#x4E8E;&#x6B63;&#x5219;&#x5316;
+    Activation  : &#x7528;&#x4E8E;&#x521B;&#x5EFA;&#x6FC0;&#x6D3B;&#x5C42;
+&quot;&quot;&quot;</span>
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>optimizers <span class="token keyword">import</span> adam
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>callbacks <span class="token keyword">import</span> EarlyStopping
+<span class="token keyword">from</span> keras<span class="token punctuation">.</span>utils <span class="token keyword">import</span> np_utils
 
+
+<span class="token keyword">def</span> <span class="token function">make_dump</span><span class="token punctuation">(</span>dump_path<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">&quot;&quot;&quot;
+    &#x521B;&#x5EFA;&#x7F13;&#x5B58;&#x76EE;&#x5F55;
+    &quot;&quot;&quot;</span>
+    <span class="token keyword">import</span> os
+    <span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>dump_path<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token keyword">not</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>isdir<span class="token punctuation">(</span>dump_path<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>dump_path<span class="token punctuation">,</span> <span class="token string">&quot;is not a valid path.&quot;</span><span class="token punctuation">)</span>
+            exit<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        os<span class="token punctuation">.</span>mkdir<span class="token punctuation">(</span>dump_path<span class="token punctuation">)</span>
+
+
+make_dump<span class="token punctuation">(</span><span class="token string">&apos;./dump&apos;</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># &#x3010;&#x6570;&#x636E;&#x8F7D;&#x5165;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+<span class="token triple-quoted-string string">&quot;&quot;&quot;
+    cifar10 &#x662F;&#x4E00;&#x4E2A;&#x5305;&#x542B;&#x963F;&#x62C9;&#x4F2F;&#x6570;&#x5B57;&#x56FE;&#x7247;&#x7684;&#x6570;&#x636E;&#x96C6;
+        &#x6570;&#x636E;&#x7C7B;&#x578B;: ndarray
+        &#x8BAD;&#x7EC3;&#x6570;&#x76EE;: 50000
+        &#x6D4B;&#x8BD5;&#x6570;&#x76EE;: 10000
+        &#x56FE;&#x7247;&#x5C3A;&#x5BF8;: 32 &#xD7; 32 &#xD7; 3
+        &#x8F93;&#x51FA;&#x7ED3;&#x679C;: len(0,1,2,3,4,5,6,7,8,9) = 10
+&quot;&quot;&quot;</span>
+<span class="token punctuation">(</span>x_train<span class="token punctuation">,</span> y_train<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>x_test<span class="token punctuation">,</span> y_test<span class="token punctuation">)</span> <span class="token operator">=</span> cifar10<span class="token punctuation">.</span>load_data<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>x_train<span class="token punctuation">.</span>shape<span class="token punctuation">,</span> y_train<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>x_test<span class="token punctuation">.</span>shape<span class="token punctuation">,</span> y_test<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+PICTURE_SIZE <span class="token operator">=</span> <span class="token number">32</span> <span class="token operator">*</span> <span class="token number">32</span> <span class="token operator">*</span> <span class="token number">3</span>
+TRAIN_SIZE <span class="token operator">=</span> x_train<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+TEST_SIZE <span class="token operator">=</span> x_test<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+OUTPUT_SIZE <span class="token operator">=</span> <span class="token number">10</span>
+
+
+<span class="token comment"># &#x3010;&#x6570;&#x636E;&#x9884;&#x5904;&#x7406;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+<span class="token keyword">def</span> <span class="token function">gaussian_distribution</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">&quot;&quot;&quot;
+    &#x9AD8;&#x65AF;&#x5206;&#x5E03;
+    &quot;&quot;&quot;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>d <span class="token operator">-</span> np<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>d<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span> np<span class="token punctuation">.</span>std<span class="token punctuation">(</span>d<span class="token punctuation">)</span>
+
+
+X_train <span class="token operator">=</span> gaussian_distribution<span class="token punctuation">(</span>x_train<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>TRAIN_SIZE<span class="token punctuation">,</span> PICTURE_SIZE<span class="token punctuation">)</span><span class="token punctuation">)</span>
+X_test <span class="token operator">=</span> gaussian_distribution<span class="token punctuation">(</span>x_test<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>TEST_SIZE<span class="token punctuation">,</span> PICTURE_SIZE<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>X_train<span class="token punctuation">.</span>shape<span class="token punctuation">,</span> X_test<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+<span class="token comment"># One-Hot &#x7F16;&#x7801;</span>
+Y_train <span class="token operator">=</span> np_utils<span class="token punctuation">.</span>to_categorical<span class="token punctuation">(</span>y_train<span class="token punctuation">,</span> OUTPUT_SIZE<span class="token punctuation">)</span>
+Y_test <span class="token operator">=</span> np_utils<span class="token punctuation">.</span>to_categorical<span class="token punctuation">(</span>y_test<span class="token punctuation">,</span> OUTPUT_SIZE<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>y_train<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>Y_train<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>Y_train<span class="token punctuation">.</span>shape<span class="token punctuation">,</span> Y_test<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+
+
+<span class="token comment"># &#x3010;&#x6A21;&#x578B;&#x5B9A;&#x4E49;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+model <span class="token operator">=</span> Sequential<span class="token punctuation">(</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Dense<span class="token punctuation">(</span><span class="token number">512</span><span class="token punctuation">,</span> input_shape<span class="token operator">=</span><span class="token punctuation">(</span>PICTURE_SIZE<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Activation<span class="token punctuation">(</span><span class="token string">&apos;relu&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>       <span class="token comment"># &#x6FC0;&#x6D3B;&#x51FD;&#x6570;</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Dropout<span class="token punctuation">(</span><span class="token number">0.4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># &#x6B63;&#x5219;&#x5316;</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Dense<span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Activation<span class="token punctuation">(</span><span class="token string">&apos;relu&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>       <span class="token comment"># &#x6FC0;&#x6D3B;&#x51FD;&#x6570;</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Dropout<span class="token punctuation">(</span><span class="token number">0.2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># &#x6B63;&#x5219;&#x5316;</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Dense<span class="token punctuation">(</span>OUTPUT_SIZE<span class="token punctuation">)</span><span class="token punctuation">)</span>       <span class="token comment"># &#x8F93;&#x51FA;&#x5C42;</span>
+model<span class="token punctuation">.</span>add<span class="token punctuation">(</span>Activation<span class="token punctuation">(</span><span class="token string">&apos;sigmoid&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    <span class="token comment"># &#x6FC0;&#x6D3B;&#x51FD;&#x6570;</span>
+
+
+<span class="token comment"># &#x3010;&#x6A21;&#x578B;&#x7F16;&#x8BD1;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+<span class="token comment"># &#x5B9A;&#x4E49;&#xFF1A;&#x635F;&#x5931;&#x51FD;&#x6570;&#x3001;&#x4F18;&#x5316;&#x5668;</span>
+model<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span>
+    loss<span class="token operator">=</span><span class="token string">&apos;categorical_crossentropy&apos;</span><span class="token punctuation">,</span>
+    optimizer<span class="token operator">=</span>adam<span class="token punctuation">(</span><span class="token number">0.01</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    metrics<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">&apos;accuracy&apos;</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span>
+
+
+<span class="token comment"># &#x3010;&#x6A21;&#x578B;&#x8BAD;&#x7EC3;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>
+    X_train<span class="token punctuation">,</span> Y_train<span class="token punctuation">,</span>
+    batch_size<span class="token operator">=</span><span class="token number">1000</span><span class="token punctuation">,</span>                    <span class="token comment"># &#x6BCF;&#x7EC4;&#x6570;&#x91CF;</span>
+    nb_epoch<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span>                        <span class="token comment"># &#x5FAA;&#x73AF;&#x6B21;&#x6570;</span>
+    validation_data<span class="token operator">=</span><span class="token punctuation">(</span>X_test<span class="token punctuation">,</span> Y_test<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    callbacks<span class="token operator">=</span><span class="token punctuation">[</span>
+        EarlyStopping<span class="token punctuation">(</span>patience<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>       <span class="token comment"># &#x51FA;&#x73B0;&#x68AF;&#x5EA6;&#x7206;&#x70B8;&#x6216;&#x6D88;&#x5931;&#x65F6;&#x505C;&#x6B62;&#x8BAD;&#x7EC3;</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span>
+
+
+<span class="token comment"># &#x3010;&#x6A21;&#x578B;&#x8BC4;&#x4F30;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+score <span class="token operator">=</span> model<span class="token punctuation">.</span>evaluate<span class="token punctuation">(</span>X_test<span class="token punctuation">,</span> Y_test<span class="token punctuation">,</span> verbose<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;score[loss, accuracy] =&quot;</span><span class="token punctuation">,</span> score<span class="token punctuation">)</span>
+
+<span class="token comment"># &#x3010;&#x9884;&#x6D4B;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+model<span class="token punctuation">.</span>predict_classes<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span>
+
+
+<span class="token comment"># &#x3010;&#x4FDD;&#x5B58;&#x6A21;&#x578B;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+model<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">&quot;./dump/model.h5&quot;</span><span class="token punctuation">)</span>
+
+<span class="token triple-quoted-string string">&quot;&quot;&quot;&#x3010;&#x6A21;&#x578B;&#x7ED3;&#x6784;&#x3001;&#x6A21;&#x578B;&#x53C2;&#x6570;&#x3001;&#x4F18;&#x5316;&#x5668;&#x53C2;&#x6570;&#x3011;
+    # &#x4FDD;&#x5B58;
+    model.save(&quot;./dump/model.h5&quot;)
+
+    # &#x52A0;&#x8F7D;
+    model = load_model(&quot;./dump/model.h5&quot;)
+&quot;&quot;&quot;</span>
+
+<span class="token triple-quoted-string string">&quot;&quot;&quot;&#x3010;&#x6A21;&#x578B;&#x7ED3;&#x6784;&#x3011;
+    # &#x4FDD;&#x5B58;
+    with open(&quot;./dump/struct.json&quot;, &quot;w&quot;) as f:
+        f.write(model.to_json())
+
+    # &#x52A0;&#x8F7D; (&#x8FD4;&#x56DE;&#x672A;&#x7F16;&#x8BD1;&#x7684;&#x6A21;&#x578B;)
+    with open(&quot;./dump/struct.json&quot;, &quot;r&quot;) as f:
+        json_str = &apos;&apos;.join(f.readlines())
+        model = model_from_json(json_str)
+&quot;&quot;&quot;</span>
+
+<span class="token triple-quoted-string string">&quot;&quot;&quot;&#x3010;&#x6A21;&#x578B;&#x53C2;&#x6570;&#x3011;
+    # &#x4FDD;&#x5B58;
+    model.save_weights(&quot;./dump/model_weights.h5&quot;)
+
+    # &#x52A0;&#x8F7D;&#xFF08;&#x4E0D;&#x80FD;&#x7EE7;&#x7EED;&#x8BAD;&#x7EC3;&#x6A21;&#x578B;&#xFF09;
+    model_weights = model.load_weights(&quot;./dump/model_weights.h5&quot;)
+&quot;&quot;&quot;</span>
+
+
+<span class="token comment"># &#x3010;&#x603B;&#x7ED3;&#x6A21;&#x578B;&#x3011;</span>
+<span class="token comment"># &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0; &#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;&#x25A0;</span>
+model<span class="token punctuation">.</span>summary<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># &#x6253;&#x5370;&#x6A21;&#x578B;&#x7ED3;&#x6784;</span>
+
+</pre>
       </div>
       
       

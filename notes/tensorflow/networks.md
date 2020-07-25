@@ -7,7 +7,7 @@
 
 ## Hello
 
->[`demo-HelloNeuralNetworks.py`](./src/demo-HelloNeuralNetworks.py)
+>[`demo-Hello.py`](./src/demo-Hello.py)
 
 ```flow
 st=>start: 开始
@@ -84,3 +84,7 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 ## 模型复用
 
 >[`demo-ModelReuse.py`](./src/demo-ModelReuse.py)
+
+## 卷积网络
+
+>[`demo-CNN.py`](./src/demo-CNN.py)
