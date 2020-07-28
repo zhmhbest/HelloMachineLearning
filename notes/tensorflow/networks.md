@@ -88,3 +88,23 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 ## 卷积网络
 
 >[`demo-CNN.py`](./src/demo-CNN.py)
+
+## 循环网络
+
+```py
+import tensorflow as tf
+from tensorflow.python.ops.rnn_cell_impl import BasicRNNCell
+# from tensorflow.python.ops.rnn_cell_impl import BasicLSTMCell
+
+rnn_inputs = tf.random_normal([2, 3, 4])
+cell = BasicRNNCell(num_units=4)  # BasicRNNCell | BasicLSTMCell
+zero_state = cell.zero_state(batch_size=2, dtype=tf.float32)
+rnn_outputs, rnn_states = tf.nn.dynamic_rnn(
+    cell=cell,
+    initial_state=zero_state,
+    inputs=rnn_inputs
+)
+print(rnn_outputs)
+print(rnn_states)
+
+```
