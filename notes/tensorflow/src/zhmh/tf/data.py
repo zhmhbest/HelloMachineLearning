@@ -87,84 +87,107 @@ def show_rgb_picture(data):
     im.show()
 
 
-def next_batch(feature, target, index, data_size, batch_size):
-    """
-    获取下一组batch
-    :param feature: 特征数据
-    :param target:  目标数据
-    :param index:   第几组
-    :param data_size:  数据总数
-    :param batch_size: 每组个数
-    :return:
-    """
-    bound_l = (index * batch_size) % data_size
-    bound_r = min(bound_l + batch_size, data_size)
-    return feature[bound_l:bound_r], target[bound_l:bound_r]
+class BatchGenerator:
+    def __init__(self, data_feature, data_target, batch_size, step_size=1):
+        from zhmh.magic import __assert__
+        __assert__(data_feature.shape[0] == data_target.shape[0], 'feature_size != target_size')
+        self.data_size = data_feature.shape[0]
+        self.batch_size = batch_size
+        self.step_size = step_size
+        self.index = 0
+        self.feature = data_feature
+        self.target = data_target
+
+    def count(self):
+        return ((self.data_size - self.batch_size) // self.step_size) + 1
+
+    def next(self):
+        index = self.index if (self.data_size - self.index) > self.batch_size else 0
+        d_x = self.feature[index: index+self.batch_size]
+        d_y = self.target[index: index+self.batch_size]
+        self.index = index + self.step_size
+        return d_x, d_y
 
 
-class DataHolder:
-    def __init__(self, data_dict):
-        """
-        :param data_dict: {
-            'train': {
-                'feature':    特征数据,
-                'target':     目标数据,
-                'size':       数据总数
-            },
-            'test': {
-                'feature':    特征数据,
-                'target':     目标数据,
-                'size':       数据总数
-            }
-        }
-        """
-        self.feed_dict = None           # set_input 后 返回一个函数
-        self._train_batch_args = None   # set_batch_size 后 返回一个字典
-        self._data_dict = data_dict
 
-    def set_input(self, input_x, input_y):
-        def feed_dict(x=None, y=None):
-            nonlocal __feed_dict__, input_x, input_y
-            if x is not None:
-                __feed_dict__[input_x] = x
-            if y is not None:
-                __feed_dict__[input_y] = y
-            return __feed_dict__
-        # end def
-        __feed_dict__ = {input_x: None, input_y: None}
-        self.feed_dict = feed_dict
+# def next_batch(feature, target, index, data_size, batch_size):
+#     """
+#     获取下一组batch
+#     :param feature: 特征数据
+#     :param target:  目标数据
+#     :param index:   第几组
+#     :param data_size:  数据总数
+#     :param batch_size: 每组个数
+#     :return:
+#     """
+#     bound_l = (index * batch_size) % data_size
+#     bound_r = min(bound_l + batch_size, data_size)
+#     return feature[bound_l:bound_r], target[bound_l:bound_r]
 
-    def set_batch_size(self, batch_size):
-        self._train_batch_args = {
-            'feature': self._data_dict['train']['feature'],
-            'target': self._data_dict['train']['target'],
-            'data_size': self._data_dict['train']['size'],
-            'batch_size': batch_size
-        }
 
-    def next_batch(self, index):
-        """
-        下一组
-        :param index:
-        :return: feed_dict
-        """
-        x, y = next_batch(index=index, **self._train_batch_args)
-        return self.feed_dict(x, y)
-
-    def get_train_data(self):
-        return self._data_dict['train']
-
-    def get_test_data(self):
-        return self._data_dict['test']
-
-    def get_train_size(self):
-        return self._data_dict['train']['size']
-
-    def get_test_size(self):
-        return self._data_dict['test']['size']
-
-    def get_train_feed(self):
-        return self.feed_dict(self._data_dict['train']['feature'], self._data_dict['train']['target'])
-
-    def get_test_feed(self):
-        return self.feed_dict(self._data_dict['test']['feature'], self._data_dict['test']['target'])
+# class DataHolder:
+#     def __init__(self, data_dict):
+#         """
+#         :param data_dict: {
+#             'train': {
+#                 'feature':    特征数据,
+#                 'target':     目标数据,
+#                 'size':       数据总数
+#             },
+#             'test': {
+#                 'feature':    特征数据,
+#                 'target':     目标数据,
+#                 'size':       数据总数
+#             }
+#         }
+#         """
+#         self.feed_dict = None           # set_input 后 返回一个函数
+#         self._train_batch_args = None   # set_batch_size 后 返回一个字典
+#         self._data_dict = data_dict
+#
+#     def set_input(self, input_x, input_y):
+#         def feed_dict(x=None, y=None):
+#             nonlocal __feed_dict__, input_x, input_y
+#             if x is not None:
+#                 __feed_dict__[input_x] = x
+#             if y is not None:
+#                 __feed_dict__[input_y] = y
+#             return __feed_dict__
+#         # end def
+#         __feed_dict__ = {input_x: None, input_y: None}
+#         self.feed_dict = feed_dict
+#
+#     def set_batch_size(self, batch_size):
+#         self._train_batch_args = {
+#             'feature': self._data_dict['train']['feature'],
+#             'target': self._data_dict['train']['target'],
+#             'data_size': self._data_dict['train']['size'],
+#             'batch_size': batch_size
+#         }
+#
+#     def next_batch(self, index):
+#         """
+#         下一组
+#         :param index:
+#         :return: feed_dict
+#         """
+#         x, y = next_batch(index=index, **self._train_batch_args)
+#         return self.feed_dict(x, y)
+#
+#     def get_train_data(self):
+#         return self._data_dict['train']
+#
+#     def get_test_data(self):
+#         return self._data_dict['test']
+#
+#     def get_train_size(self):
+#         return self._data_dict['train']['size']
+#
+#     def get_test_size(self):
+#         return self._data_dict['test']['size']
+#
+#     def get_train_feed(self):
+#         return self.feed_dict(self._data_dict['train']['feature'], self._data_dict['train']['target'])
+#
+#     def get_test_feed(self):
+#         return self.feed_dict(self._data_dict['test']['feature'], self._data_dict['test']['target'])
