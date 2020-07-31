@@ -1,56 +1,65 @@
+import numpy as np
 import tensorflow as tf
-from zhmh.tf import TensorBoard, force_use_cpu
-from zhmh.tf.losses import cross_entropy
-from zhmh.tf.data import generate_random_data, next_batch
-board = TensorBoard()
-force_use_cpu()
-
-
-"""
-    基本设置
-"""
-TRAIN_TIMES = 5000
-LEARNING_RATE = 0.001
-BATCH_SIZE = 8
-DATASET_SIZE = 128
-
+from zhmh.data import BatchGenerator
 
 """
     生成模拟数据集
-    x1
+    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    x_1
         ↘
-            y
+           y → output
         ↗
-    x2
+    x_2
 """
-DATA_X, DATA_Y = generate_random_data(DATASET_SIZE, 2, 1)
-
+DATA_SIZE = 128
+INPUT_SIZE = 2
+OUTPUT_SIZE = 1
+data_all = np.random.rand(DATA_SIZE * (INPUT_SIZE + OUTPUT_SIZE)).reshape(DATA_SIZE, -1)
+x_train = data_all[:, 0:INPUT_SIZE]
+y_train = data_all[:, INPUT_SIZE:(INPUT_SIZE + OUTPUT_SIZE)]
+print(x_train.shape, y_train.shape)
 
 """
-    定义神经网络的参数，输入和输出节点
-    x1  a_{11}
-        a_{12}  y
-    x2  a_{13}
+    定义输入、输出节点
+    定义网络
+    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    x_1        a_{11}
+        →(w1)→ a_{12} →(w2)→ y
+    x_2        a_{13}
 """
-input_x = tf.placeholder(tf.float32, shape=(None, 2), name="x_input")
-input_y = tf.placeholder(tf.float32, shape=(None, 1), name='y_input')
+HIDDEN_SIZE = 3
 
-w1 = tf.Variable(tf.random_normal([2, 3], stddev=1, seed=1, name='init_w1'), name='w1')
-w2 = tf.Variable(tf.random_normal([3, 1], stddev=1, seed=1, name='init_w2'), name='w2')
+place_x = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
+place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
-a = tf.matmul(input_x, w1, name='a')
-y = tf.matmul(a, w2, name='y')
+w1 = tf.Variable(tf.random_normal([INPUT_SIZE, HIDDEN_SIZE], stddev=1))
+w2 = tf.Variable(tf.random_normal([HIDDEN_SIZE, OUTPUT_SIZE], stddev=1))
 
-# 损失函数
-loss = tf.reduce_mean(cross_entropy(input_y, y))
+a = tf.matmul(place_x, w1)
+y = tf.matmul(a, w2)
 
-# 优化器
+"""
+    定义损失函数
+    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+"""
+loss = tf.losses.mean_squared_error(place_y, y)
+
+"""
+    定义优化器
+    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+"""
+LEARNING_RATE = 0.001
 train_op = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss)
-
 
 """
     训练
+    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 """
+BATCH_SIZE = 8
+batch = BatchGenerator(x_train, y_train, BATCH_SIZE)
+TRAIN_TIMES = batch.count() * 10
+print('TRAIN_TIMES:', TRAIN_TIMES)
+
 with tf.Session() as sess:
     # 初始化全部变量OP
     tf.global_variables_initializer().run()
@@ -62,25 +71,16 @@ with tf.Session() as sess:
 
     # 训练模型
     for i in range(1, 1 + TRAIN_TIMES):
-        batch_X, batch_Y = next_batch(DATA_X, DATA_Y, i, DATASET_SIZE, BATCH_SIZE)
+        batch_x, batch_y = batch.next()
         sess.run(train_op, feed_dict={
-            input_x: batch_X,
-            input_y: batch_Y
+            place_x: batch_x,
+            place_y: batch_y
         })
-        if i % 1000 == 0:
-            loss_value = sess.run(loss, feed_dict={input_x: DATA_X, input_y: DATA_Y})
+        if i % 200 == 0:
+            loss_value = sess.run(loss, feed_dict={place_x: x_train, place_y: y_train})
             print("训练%d次后，损失为%g。" % (i, loss_value))
-    # end for
 
     # 训练后的参数取值。
     print()
     print("After w1:\n", sess.run(w1))
     print("After w2:\n", sess.run(w2))
-
-    # 保存模型
-    board.save(sess.graph)
-# end with
-
-
-# 启动TensorBoard
-board.board()
