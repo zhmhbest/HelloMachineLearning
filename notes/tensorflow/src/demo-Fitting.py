@@ -25,11 +25,12 @@ y_train = np.array(y_train_buffer)
     定义神经网络
     ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 """
+LAYER_NEURONS = [INPUT_SIZE, 5, 4, 3, OUTPUT_SIZE]
+REGULARIZER_COLLECTION = 'losses'
+
 place_x = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
 place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
-LAYER_NEURONS = [INPUT_SIZE, 5, 4, 3, OUTPUT_SIZE]
-REGULARIZER_COLLECTION = 'losses'
 l2_regularizer = tf.contrib.layers.l2_regularizer(0.003)
 x = place_x
 y = None
