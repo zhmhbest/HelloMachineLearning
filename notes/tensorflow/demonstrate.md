@@ -89,6 +89,8 @@ shadow_variable = decay * shadow_variable + (1 - decay) * variable
 ema = tf.train.ExponentialMovingAverage(decay=衰减率, num_updates=None)
     # num_updates(optional):  动态设置decay大小
     # decay = min(decay, (1+num_updates)/(10+num_updates))
+ema_op = ema.apply(tf.trainable_variables())
+
 x = activation(tf.matmul(x, weight) + biases)
 x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 ```
