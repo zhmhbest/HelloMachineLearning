@@ -69,8 +69,7 @@ decayed_learning_rate = tf.train.exponential_decay(
 
 ![](./images/fitting_3.png)
 
-<!--
-## 滑动平均模型
+## Moving
 
 >[`demo-Mnist.py`](./src/demo-Mnist.py)
 
@@ -94,6 +93,7 @@ x = activation(tf.matmul(x, weight) + biases)
 x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 ```
 
+<!--
 ## 模型复用
 
 >[`demo-ModelReuse.py`](./src/demo-ModelReuse.py)

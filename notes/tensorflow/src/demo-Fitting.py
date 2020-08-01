@@ -27,14 +27,15 @@ y_train = np.array(y_train_buffer)
 """
 LAYER_NEURONS = [INPUT_SIZE, 5, 4, 3, OUTPUT_SIZE]
 REGULARIZER_COLLECTION = 'losses'
+REGULARIZATION_RATE = 0.003
 
 place_x = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
 place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
-l2_regularizer = tf.contrib.layers.l2_regularizer(0.003)
+l2_regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
+
 x = place_x
 y = None
-
 for _i_ in range(1, len(LAYER_NEURONS)):
     layer_i, layer_o = LAYER_NEURONS[_i_-1], LAYER_NEURONS[_i_]
     with tf.variable_scope('layer' + str(_i_)):
