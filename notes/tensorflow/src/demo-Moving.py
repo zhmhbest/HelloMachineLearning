@@ -1,6 +1,6 @@
 import tensorflow as tf
 from zhmh.dataset import BatchGenerator
-from zhmh.tf import generate_network
+from zhmh.tf import generate_network, get_l2_build_lambda, get_ema_build_lambda
 
 """
     加载数据
@@ -17,38 +17,22 @@ OUTPUT_SIZE = y_train.shape[1]
     ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 """
 LAYER_NEURONS = [INPUT_SIZE, 500, OUTPUT_SIZE]
-REGULARIZER_COLLECTION = 'losses'
 REGULARIZATION_RATE = 0.0001
+REGULARIZER_COLLECTION = 'losses'
 MOVING_AVERAGE_DECAY = 0.99
+global_step = tf.Variable(0, trainable=False)
 
 place_x = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
 place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
-l2_regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
-global_step = tf.Variable(0, trainable=False)
-ema = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
+# 普通网络
+y = generate_network(
+    LAYER_NEURONS, place_x, 0.1, 0.001,
+    get_l2_build_lambda(REGULARIZATION_RATE, REGULARIZER_COLLECTION, tf.nn.relu)
+)
 
-
-def build_network(x, w, b, is_final):
-    tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(w))
-    if is_final:
-        return tf.matmul(x, w) + b
-    else:
-        return tf.nn.relu(tf.matmul(x, w) + b)
-
-
-y = generate_network(LAYER_NEURONS, place_x, 0.1, 0.001, build_network)
-# 要被训练
-ema_op = ema.apply(tf.trainable_variables())
-
-
-def build_network_ema(x, w, b, is_final):
-    if is_final:
-        return tf.matmul(x, ema.average(w)) + ema.average(b)
-    else:
-        return tf.nn.relu(tf.matmul(x, ema.average(w)) + ema.average(b))
-
-
+# 构建EMA网络
+build_network_ema, ema_op = get_ema_build_lambda(global_step, MOVING_AVERAGE_DECAY, tf.nn.relu)
 y_ema = generate_network(LAYER_NEURONS, place_x, 0.1, 0.001, build_network_ema, var_reuse=True)
 
 """

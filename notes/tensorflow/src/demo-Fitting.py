@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from zhmh.tf import generate_network
+from zhmh.tf import generate_network, get_l2_build_lambda
 
 """
     生成关联数据
@@ -27,24 +27,16 @@ y_train = np.array(y_train_buffer)
     ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 """
 LAYER_NEURONS = [INPUT_SIZE, 5, 4, 3, OUTPUT_SIZE]
-REGULARIZER_COLLECTION = 'losses'
 REGULARIZATION_RATE = 0.003
+REGULARIZER_COLLECTION = 'losses'
 
 place_x = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
 place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
-l2_regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
-
-
-def build_network(x, w, b, is_final):
-    tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(w))
-    if is_final:
-        return tf.matmul(x, w) + b
-    else:
-        return tf.nn.elu(tf.matmul(x, w) + b)
-
-
-y = generate_network(LAYER_NEURONS, place_x, 1, 0.001, build_network)
+y = generate_network(
+    LAYER_NEURONS, place_x, 1, 0.001,
+    get_l2_build_lambda(REGULARIZATION_RATE, REGULARIZER_COLLECTION, tf.nn.elu)
+)
 
 """
     定义损失函数

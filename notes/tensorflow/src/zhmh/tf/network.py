@@ -30,10 +30,11 @@ def generate_network(
             if _final else
             tf.nn.relu(tf.matmul(_x, _w) + _b)
         )
+
     # 构建网络
     x = input_tensor
     for __i in range(1, len(layer_neurons)):
-        layer_io = layer_neurons[__i-1], layer_neurons[__i]
+        layer_io = layer_neurons[__i - 1], layer_neurons[__i]
         if var_reuse is None:
             with tf.variable_scope('layer' + str(__i)):
                 weights = tf.get_variable(
@@ -49,5 +50,35 @@ def generate_network(
                 weights = tf.get_variable(name='weights')
                 biases = tf.get_variable(name='biases')
         # BuildNet
-        x = build_lambda(x, weights, biases, __i+1 == len(layer_neurons))
+        x = build_lambda(x, weights, biases, __i + 1 == len(layer_neurons))
     return x
+
+
+def get_l2_build_lambda(reg_weight: float, reg_collection: str = 'losses', activation_function=tf.nn.relu):
+    from tensorflow.contrib.layers import l2_regularizer
+    # tf.contrib.layers.l2_regularizer
+    l2_regularizer = l2_regularizer(reg_weight)
+
+    def build_network(x, w, b, is_final):
+        nonlocal reg_collection, activation_function
+        tf.add_to_collection(reg_collection, l2_regularizer(w))
+        if is_final:
+            return tf.matmul(x, w) + b
+        else:
+            return activation_function(tf.matmul(x, w) + b)
+
+    return build_network
+
+
+def get_ema_build_lambda(global_step, decay, activation_function=tf.nn.relu):
+    ema = tf.train.ExponentialMovingAverage(decay, global_step)
+    ema_op = ema.apply(tf.trainable_variables())  # 要被训练
+
+    def build_network(x, w, b, is_final):
+        nonlocal ema, activation_function
+        if is_final:
+            return tf.matmul(x, ema.average(w)) + ema.average(b)
+        else:
+            return activation_function(tf.matmul(x, ema.average(w)) + ema.average(b))
+
+    return build_network, ema_op
