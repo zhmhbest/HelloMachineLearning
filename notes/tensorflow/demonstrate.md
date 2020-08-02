@@ -95,11 +95,19 @@ x = activation(tf.matmul(x, weight) + biases)
 x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 ```
 
-<!--
-## 模型复用
+## Reuse
 
 >[`demo-ModelReuse.py`](./src/demo-ModelReuse.py)
 
+模型复用与加载
+
+## TensorBoard
+
+>[`demo-TensorBoard.py`](./src/demo-TensorBoard.py)
+
+可视化预览模型
+
+<!--
 ## 卷积网络
 
 >[`demo-CNN.py`](./src/demo-CNN.py)
@@ -123,5 +131,4 @@ print(rnn_outputs)
 print(rnn_states)
 
 ```
-
 -->
