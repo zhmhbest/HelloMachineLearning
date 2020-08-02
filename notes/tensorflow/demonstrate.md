@@ -71,7 +71,7 @@ decayed_learning_rate = tf.train.exponential_decay(
 
 ## Moving
 
->[`demo-Mnist.py`](./src/demo-Mnist.py)
+>[`demo-Moving.py`](./src/demo-Moving.py)
 
 滑动平均模型用来估计变量的局部均值，使得变量的更新与一段时间内的历史取值有关。
 在采用随机梯度下降算法训练神经网络时，使用滑动平均模型可以在一定程度提高最终模型在测试数据上的表现。
