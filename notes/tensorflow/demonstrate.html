@@ -281,6 +281,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <li><a href="#reuse">Reuse</a></li>
 <li><a href="#tensorboard">TensorBoard</a></li>
 <li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
+<li><a href="#recurrent-neural-network">Recurrent Neural Network</a></li>
 </ul>
 </li>
 </ul>
@@ -381,7 +382,27 @@ x <span class="token operator">=</span> activation<span class="token punctuation
 <p><a href="./src/demo-CNN.py"><code>demo-CNN.py</code></a></p>
 </blockquote>
 <p>&#x80FD;&#x591F;&#x6309;&#x5176;&#x9636;&#x5C42;&#x7ED3;&#x6784;&#x5BF9;&#x8F93;&#x5165;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5E73;&#x79FB;&#x4E0D;&#x53D8;&#x5206;&#x7C7B;&#x3002;&#x7528;&#x4E8E;&#x89E3;&#x51B3;&#xFF0C;&#x56E0;&#x4E3A;&#x56FE;&#x50CF;&#x6570;&#x636E;&#x91CF;&#x5927;&#x5BFC;&#x81F4;&#x7684;&#x5904;&#x7406;&#x6548;&#x7387;&#x4F4E;&#xFF1B;&#x548C;&#x56FE;&#x50CF;&#x5728;&#x6570;&#x5B57;&#x5316;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x96BE;&#x4EE5;&#x4FDD;&#x7559;&#x7684;&#x7279;&#x5F81;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<h2 class="mume-header" id="recurrent-neural-network">Recurrent Neural Network</h2>
 
+<blockquote>
+<p><a href="./src/demo-LSTM.py"><code>demo-LSTM.py</code></a></p>
+</blockquote>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token keyword">import</span> tensorflow <span class="token keyword">as</span> tf
+<span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>python<span class="token punctuation">.</span>ops<span class="token punctuation">.</span>rnn_cell_impl <span class="token keyword">import</span> BasicRNNCell
+<span class="token comment"># from tensorflow.python.ops.rnn_cell_impl import BasicLSTMCell</span>
+
+rnn_inputs <span class="token operator">=</span> tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+cell <span class="token operator">=</span> BasicRNNCell<span class="token punctuation">(</span>num_units<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">)</span>  <span class="token comment"># BasicRNNCell | BasicLSTMCell</span>
+zero_state <span class="token operator">=</span> cell<span class="token punctuation">.</span>zero_state<span class="token punctuation">(</span>batch_size<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+rnn_outputs<span class="token punctuation">,</span> rnn_states <span class="token operator">=</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>dynamic_rnn<span class="token punctuation">(</span>
+    cell<span class="token operator">=</span>cell<span class="token punctuation">,</span>
+    initial_state<span class="token operator">=</span>zero_state<span class="token punctuation">,</span>
+    inputs<span class="token operator">=</span>rnn_inputs
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>rnn_outputs<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>rnn_states<span class="token punctuation">)</span>
+
+</pre>
       </div>
       
       
