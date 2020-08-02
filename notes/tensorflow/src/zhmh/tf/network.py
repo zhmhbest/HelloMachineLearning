@@ -1,8 +1,5 @@
 import tensorflow as tf
-
-
-def __is_number(arg):
-    return type(arg) is float or type(arg) is int
+from .common import __init_w_b
 
 
 def generate_network(
@@ -23,16 +20,7 @@ def generate_network(
     :param var_reuse: 已声明的变量
     :return:
     """
-    # 权重初始方法
-    w_initializer = \
-        (lambda: tf.truncated_normal_initializer(stddev=w_initialize)) if __is_number(w_initialize) else \
-        w_initialize
-    # print(type(w_initializer()))
-    # 偏执初始方法
-    b_initializer = \
-        (lambda: tf.constant_initializer(b_initialize)) if __is_number(b_initialize) else \
-        b_initialize
-    # print(type(b_initializer()))
+    w_initializer, b_initializer = __init_w_b(w_initialize, b_initialize)
 
     # 默认ReLu激活
     if build_lambda is None:
