@@ -1,5 +1,6 @@
 import tensorflow as tf
 from zhmh.dataset import BatchGenerator
+from zhmh.tf import generate_network
 
 """
     加载数据
@@ -27,43 +28,27 @@ l2_regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
 global_step = tf.Variable(0, trainable=False)
 ema = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
 
-x = place_x
-y = None
-for _i_ in range(1, len(LAYER_NEURONS)):
-    layer_i, layer_o = LAYER_NEURONS[_i_ - 1], LAYER_NEURONS[_i_]
-    with tf.variable_scope('layer' + str(_i_)):
-        weights = tf.get_variable(
-            name='weights',
-            shape=[layer_i, layer_o],
-            initializer=tf.truncated_normal_initializer(stddev=0.1))
-        biases = tf.get_variable(
-            name='biases',
-            shape=[layer_o],
-            initializer=tf.constant_initializer(0.001))
 
-        # 正则化收集器
-        tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(weights))
+def build_network(x, w, b, is_final):
+    tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(w))
+    if is_final:
+        return tf.matmul(x, w) + b
+    else:
+        return tf.nn.relu(tf.matmul(x, w) + b)
 
-        if _i_ != len(LAYER_NEURONS) - 1:
-            x = tf.nn.relu(tf.matmul(x, weights) + biases)
-        else:
-            y = tf.matmul(x, weights) + biases
 
-# 创建影子变量
+y = generate_network(LAYER_NEURONS, place_x, 0.1, 0.001, build_network)
 ema_op = ema.apply(tf.trainable_variables())
-x = place_x
-y_ema = None
-for _i_ in range(1, len(LAYER_NEURONS)):
-    layer_i, layer_o = LAYER_NEURONS[_i_ - 1], LAYER_NEURONS[_i_]
-    with tf.variable_scope('layer' + str(_i_), reuse=True):
-        # 获取已经定义的变量
-        weights = tf.get_variable(name='weights')
-        biases = tf.get_variable(name='biases')
 
-        if _i_ != len(LAYER_NEURONS) - 1:
-            x = tf.nn.relu(tf.matmul(x, ema.average(weights)) + ema.average(biases))
-        else:
-            y_ema = tf.matmul(x, weights) + biases
+
+def build_network_ema(x, w, b, is_final):
+    if is_final:
+        return tf.matmul(x, ema.average(w)) + ema.average(b)
+    else:
+        return tf.nn.relu(tf.matmul(x, ema.average(w)) + ema.average(b))
+
+
+y_ema = generate_network(LAYER_NEURONS, place_x, 0.1, 0.001, build_network_ema, var_reuse=True)
 
 """
     定义损失函数
@@ -81,9 +66,9 @@ averages_accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(y_ema, 1), tf.argm
     ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 """
 LEARNING_RATE_BASE = 0.8
-BATCH_SIZE = 512
+BATCH_SIZE = 128
 LEARNING_RATE_DECAY = 0.99
-TRAINING_TIMES = 5000
+TRAINING_TIMES = 3000
 
 learning_rate = tf.train.exponential_decay(
     LEARNING_RATE_BASE,
@@ -91,8 +76,7 @@ learning_rate = tf.train.exponential_decay(
     size_train / BATCH_SIZE, LEARNING_RATE_DECAY,
     staircase=True
 )
-batch = BatchGenerator(x_train, y_train, BATCH_SIZE, BATCH_SIZE/2)
-
+batch = BatchGenerator(x_train, y_train, BATCH_SIZE, BATCH_SIZE/4)
 train_adam = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
 with tf.control_dependencies([train_adam, y_ema]):
     train_op = tf.no_op(name='train')
@@ -100,13 +84,13 @@ with tf.control_dependencies([train_adam, y_ema]):
 with tf.Session() as sess:
     # 初始化全部变量OP
     tf.global_variables_initializer().run()
-    x_batch, y_batch = batch.next()
     for i in range(1, 1 + TRAINING_TIMES):
+        x_batch, y_batch = batch.next()
         sess.run(train_op, feed_dict={
             place_x: x_batch,
             place_y: y_batch
         })
-        if i % 1000 == 0:
+        if i % 500 == 0:
             va, vl, vg = sess.run([accuracy, loss, global_step], feed_dict={
                 place_x: x_train,
                 place_y: y_train
