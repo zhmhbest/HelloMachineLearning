@@ -1,5 +1,5 @@
 import tensorflow as tf
-from zhmh.data import BatchGenerator
+from zhmh.dataset import BatchGenerator
 
 """
     加载数据

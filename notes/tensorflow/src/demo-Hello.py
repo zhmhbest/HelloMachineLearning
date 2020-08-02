@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from zhmh.data import BatchGenerator
+from zhmh.dataset import BatchGenerator
 
 """
     生成模拟数据集

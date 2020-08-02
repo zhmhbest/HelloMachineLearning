@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from zhmh.tf import generate_network
 
 """
     生成关联数据
@@ -34,25 +35,16 @@ place_y = tf.placeholder(tf.float32, shape=(None, OUTPUT_SIZE))
 
 l2_regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
 
-x = place_x
-y = None
-for _i_ in range(1, len(LAYER_NEURONS)):
-    layer_i, layer_o = LAYER_NEURONS[_i_-1], LAYER_NEURONS[_i_]
-    with tf.variable_scope('layer' + str(_i_)):
-        weights = tf.get_variable(
-            name='weights',
-            shape=[layer_i, layer_o],
-            initializer=tf.truncated_normal_initializer(stddev=1))
-        biases = tf.get_variable(
-            name='biases',
-            shape=[layer_o],
-            initializer=tf.constant_initializer(0.001))
-        # 正则化收集器
-        tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(weights))
-        if _i_ != len(LAYER_NEURONS)-1:
-            x = tf.nn.elu(tf.matmul(x, weights) + biases)
-        else:
-            y = tf.matmul(x, weights) + biases
+
+def build_network(x, w, b, is_final):
+    tf.add_to_collection(REGULARIZER_COLLECTION, l2_regularizer(w))
+    if is_final:
+        return tf.matmul(x, w) + b
+    else:
+        return tf.nn.elu(tf.matmul(x, w) + b)
+
+
+y = generate_network(LAYER_NEURONS, place_x, 1, 0.001, build_network)
 
 """
     定义损失函数
