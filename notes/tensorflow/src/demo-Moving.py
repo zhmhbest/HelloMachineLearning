@@ -38,6 +38,7 @@ def build_network(x, w, b, is_final):
 
 
 y = generate_network(LAYER_NEURONS, place_x, 0.1, 0.001, build_network)
+# 要被训练
 ema_op = ema.apply(tf.trainable_variables())
 
 
@@ -78,7 +79,7 @@ learning_rate = tf.train.exponential_decay(
 )
 batch = BatchGenerator(x_train, y_train, BATCH_SIZE, BATCH_SIZE/4)
 train_adam = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
-with tf.control_dependencies([train_adam, y_ema]):
+with tf.control_dependencies([train_adam, ema_op]):
     train_op = tf.no_op(name='train')
 
 with tf.Session() as sess:
