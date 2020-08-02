@@ -107,11 +107,13 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 
 可视化预览模型
 
-<!--
-## 卷积网络
+## Convolutional Neural Networks
 
 >[`demo-CNN.py`](./src/demo-CNN.py)
 
+能够按其阶层结构对输入信息进行平移不变分类。用于解决，因为图像数据量大导致的处理效率低；和图像在数字化的过程中难以保留的特征的问题。
+
+<!--
 ## 循环网络
 
 ```py
