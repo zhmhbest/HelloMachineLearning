@@ -147,7 +147,7 @@ with tf.Session() as sess:
 
 能够按其阶层结构对输入信息进行平移不变分类。用于解决，因为图像数据量大导致的处理效率低；和图像在数字化的过程中难以保留的特征的问题。
 
-<!-- ## Recurrent Neural Network
+## Recurrent Neural Network
 
 >[`demo-LSTM.py`](./src/demo-LSTM.py)
 
@@ -156,15 +156,36 @@ import tensorflow as tf
 from tensorflow.python.ops.rnn_cell_impl import BasicRNNCell
 # from tensorflow.python.ops.rnn_cell_impl import BasicLSTMCell
 
-rnn_inputs = tf.random_normal([2, 3, 4])
-cell = BasicRNNCell(num_units=4)  # BasicRNNCell | BasicLSTMCell
-zero_state = cell.zero_state(batch_size=2, dtype=tf.float32)
-rnn_outputs, rnn_states = tf.nn.dynamic_rnn(
-    cell=cell,
-    initial_state=zero_state,
-    inputs=rnn_inputs
-)
-print(rnn_outputs)
-print(rnn_states)
+#...
 
-``` -->
+# Cell
+generate_one_cell = (lambda: BasicRNNCell(rnn_unit))
+cell = tf.nn.rnn_cell.MultiRNNCell([generate_one_cell() for i in range(rnn_deep)])
+init_state = cell.zero_state(batch_size, dtype=tf.float32)
+
+# 建立网络
+input_reshaped = tf.reshape(input_tensor, [-1, input_size])
+input_weighted = tf.matmul(input_reshaped, weights_input) + biases_input
+rnn_input = tf.reshape(input_weighted, [-1, time_step, rnn_unit])
+rnn_output, final_states = tf.nn.dynamic_rnn(cell, rnn_input, initial_state=init_state, dtype=tf.float32)
+
+y_pred = tf.matmul(
+    tf.reshape(rnn_output, [-1, rnn_unit]),
+    weights_output
+) + biases_output
+```
+
+#### 运行效果
+
+##### 数据集
+
+![lstm_data](./images/lstm_data.png)
+
+##### 与训练数据拟合程度
+
+![lstm_train](./images/lstm_train.png)
+
+##### 与测试数据拟合程度
+
+![lstm_test](./images/lstm_test.png)
+
