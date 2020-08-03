@@ -29,6 +29,7 @@ def get_l2_build_lambda(reg_weight: float, reg_collection: str = 'losses', activ
 
 
 def get_ema_build_lambda(global_step, decay, activation_function=tf.nn.relu):
+    # global_step = tf.Variable(0, trainable=False)
     ema = tf.train.ExponentialMovingAverage(decay, global_step)
     ema_op = ema.apply(tf.trainable_variables())  # 要被训练
 
