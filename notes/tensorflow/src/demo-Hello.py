@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from zhmh.dataset import BatchGenerator
+from zhmh.dataset import BatchGenerator, generate_random_data
 
 """
     生成模拟数据集
@@ -14,9 +14,10 @@ from zhmh.dataset import BatchGenerator
 DATA_SIZE = 128
 INPUT_SIZE = 2
 OUTPUT_SIZE = 1
-data_all = np.random.rand(DATA_SIZE * (INPUT_SIZE + OUTPUT_SIZE)).reshape(DATA_SIZE, -1)
-x_train = data_all[:, 0:INPUT_SIZE]
-y_train = data_all[:, INPUT_SIZE:(INPUT_SIZE + OUTPUT_SIZE)]
+# data_all = np.random.rand(DATA_SIZE * (INPUT_SIZE + OUTPUT_SIZE)).reshape(DATA_SIZE, -1)
+# x_train = data_all[:, 0:INPUT_SIZE]
+# y_train = data_all[:, INPUT_SIZE:(INPUT_SIZE + OUTPUT_SIZE)]
+x_train, y_train = generate_random_data(DATA_SIZE, INPUT_SIZE, OUTPUT_SIZE)
 print(x_train.shape, y_train.shape)
 
 """
