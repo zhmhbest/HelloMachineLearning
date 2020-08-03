@@ -62,16 +62,16 @@ learning_rate = tf.train.exponential_decay(
     staircase=True
 )
 batch = BatchGenerator(x_train, y_train, BATCH_SIZE, BATCH_SIZE/4)
-train_adam = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
-with tf.control_dependencies([train_adam, ema_op]):
-    train_op = tf.no_op(name='train')
+train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
+with tf.control_dependencies([train_op, ema_op]):
+    train_ops = tf.no_op(name='train')
 
 with tf.Session() as sess:
     # 初始化全部变量OP
     tf.global_variables_initializer().run()
     for i in range(1, 1 + TRAINING_TIMES):
         x_batch, y_batch = batch.next()
-        sess.run(train_op, feed_dict={
+        sess.run(train_ops, feed_dict={
             place_x: x_batch,
             place_y: y_batch
         })
