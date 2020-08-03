@@ -57,6 +57,22 @@ decayed_learning_rate = tf.train.exponential_decay(
 
 使用正则化避免过拟合。
 
+```py
+from tensorflow.contrib.layers import l2_regularizer
+
+# 定义正则化方法，设置正则化力度
+l2_regularizer = l2_regularizer(REGULARIZATION_RATE)
+
+# 收集每个权重的信息
+tf.add_to_collection('losses', l2_regularizer(weights))
+
+# 在原损失函数的基础上构建正则化损失函数
+loss_l2 = tf.add_n(tf.get_collection('losses')) + loss
+
+# 使用正则化后的损失函数作为下降方向
+train_op = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss_l2)
+```
+
 ### 欠拟合
 
 ![](./images/fitting_1.png)
@@ -79,13 +95,15 @@ decayed_learning_rate = tf.train.exponential_decay(
 该模型会维护一个影子变量（shadow variable），这个影子变量的初始值就是相应变量的初始值，每次运行时，会对影子变量的值进行更新。
 
 ```py
+# 先生成一般网络
+y = activation(tf.matmul(x, weight) + biases)
+
 """
 shadow_variable = decay * shadow_variable + (1 - decay) * variable
     decay:                  衰减率，决定更新速度（一般为0.999或0.9999）
     shadow_variable:        影子变量
     variable:               待更新的变量
 """
-
 ema = tf.train.ExponentialMovingAverage(decay=衰减率, num_updates=None)
     # num_updates(optional):  动态设置decay大小
     # decay = min(decay, (1+num_updates)/(10+num_updates))
@@ -93,15 +111,29 @@ ema = tf.train.ExponentialMovingAverage(decay=衰减率, num_updates=None)
 # 需要同时训练ema_op
 ema_op = ema.apply(tf.trainable_variables())
 
-x = activation(tf.matmul(x, weight) + biases)
-x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
+# 再生成EMA网络
+y = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
+
+# 定义优化器
+train_op = tf.train.Optimizer(learning_rate).minimize(loss)
+train_ops = [train_op, ema_op]
 ```
 
-## Reuse
+## Restore
 
->[`demo-ModelReuse.py`](./src/demo-ModelReuse.py)
+>[`demo-Restore.py`](./src/demo-Restore.py)
 
-模型复用与加载。
+模型保存与复用。
+
+```py
+# Saver必须在定义完网络之后才能实例化
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+    # ...
+    print("Trained")
+    saver.save(sess, model_location)
+```
 
 ## TensorBoard
 
@@ -115,7 +147,7 @@ x = activation(tf.matmul(x, ema.average(weight)) + ema.average(biases))
 
 能够按其阶层结构对输入信息进行平移不变分类。用于解决，因为图像数据量大导致的处理效率低；和图像在数字化的过程中难以保留的特征的问题。
 
-## Recurrent Neural Network
+<!-- ## Recurrent Neural Network
 
 >[`demo-LSTM.py`](./src/demo-LSTM.py)
 
@@ -135,4 +167,4 @@ rnn_outputs, rnn_states = tf.nn.dynamic_rnn(
 print(rnn_outputs)
 print(rnn_states)
 
-```
+``` -->

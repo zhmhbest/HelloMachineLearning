@@ -278,7 +278,7 @@ pre[data-line] .line-highlight[data-end]:after {
 </ul>
 </li>
 <li><a href="#moving">Moving</a></li>
-<li><a href="#reuse">Reuse</a></li>
+<li><a href="#restore">Restore</a></li>
 <li><a href="#tensorboard">TensorBoard</a></li>
 <li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
 <li><a href="#recurrent-neural-network">Recurrent Neural Network</a></li>
@@ -331,7 +331,20 @@ decayed_learning_rate <span class="token operator">=</span> tf<span class="token
 <p><a href="./src/demo-Fitting.py"><code>demo-Fitting.py</code></a></p>
 </blockquote>
 <p>&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x5316;&#x907F;&#x514D;&#x8FC7;&#x62DF;&#x5408;&#x3002;</p>
-<h3 class="mume-header" id="%E6%AC%A0%E6%8B%9F%E5%90%88">&#x6B20;&#x62DF;&#x5408;</h3>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>contrib<span class="token punctuation">.</span>layers <span class="token keyword">import</span> l2_regularizer
+
+<span class="token comment"># &#x5B9A;&#x4E49;&#x6B63;&#x5219;&#x5316;&#x65B9;&#x6CD5;&#xFF0C;&#x8BBE;&#x7F6E;&#x6B63;&#x5219;&#x5316;&#x529B;&#x5EA6;</span>
+l2_regularizer <span class="token operator">=</span> l2_regularizer<span class="token punctuation">(</span>REGULARIZATION_RATE<span class="token punctuation">)</span>
+
+<span class="token comment"># &#x6536;&#x96C6;&#x6BCF;&#x4E2A;&#x6743;&#x91CD;&#x7684;&#x4FE1;&#x606F;</span>
+tf<span class="token punctuation">.</span>add_to_collection<span class="token punctuation">(</span><span class="token string">&apos;losses&apos;</span><span class="token punctuation">,</span> l2_regularizer<span class="token punctuation">(</span>weights<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># &#x5728;&#x539F;&#x635F;&#x5931;&#x51FD;&#x6570;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#x6784;&#x5EFA;&#x6B63;&#x5219;&#x5316;&#x635F;&#x5931;&#x51FD;&#x6570;</span>
+loss_l2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>add_n<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>get_collection<span class="token punctuation">(</span><span class="token string">&apos;losses&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> loss
+
+<span class="token comment"># &#x4F7F;&#x7528;&#x6B63;&#x5219;&#x5316;&#x540E;&#x7684;&#x635F;&#x5931;&#x51FD;&#x6570;&#x4F5C;&#x4E3A;&#x4E0B;&#x964D;&#x65B9;&#x5411;</span>
+train_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>AdamOptimizer<span class="token punctuation">(</span>LEARNING_RATE<span class="token punctuation">)</span><span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>loss_l2<span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="%E6%AC%A0%E6%8B%9F%E5%90%88">&#x6B20;&#x62DF;&#x5408;</h3>
 
 <p><img src="./images/fitting_1.png" alt></p>
 <h3 class="mume-header" id="%E8%BF%87%E6%8B%9F%E5%90%88">&#x8FC7;&#x62DF;&#x5408;</h3>
@@ -348,13 +361,15 @@ decayed_learning_rate <span class="token operator">=</span> tf<span class="token
 <p>&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x7528;&#x6765;&#x4F30;&#x8BA1;&#x53D8;&#x91CF;&#x7684;&#x5C40;&#x90E8;&#x5747;&#x503C;&#xFF0C;&#x4F7F;&#x5F97;&#x53D8;&#x91CF;&#x7684;&#x66F4;&#x65B0;&#x4E0E;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x5386;&#x53F2;&#x53D6;&#x503C;&#x6709;&#x5173;&#x3002;<br>
 &#x5728;&#x91C7;&#x7528;&#x968F;&#x673A;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7B97;&#x6CD5;&#x8BAD;&#x7EC3;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x65F6;&#xFF0C;&#x4F7F;&#x7528;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x5728;&#x4E00;&#x5B9A;&#x7A0B;&#x5EA6;&#x63D0;&#x9AD8;&#x6700;&#x7EC8;&#x6A21;&#x578B;&#x5728;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#x4E0A;&#x7684;&#x8868;&#x73B0;&#x3002;</p>
 <p>&#x8BE5;&#x6A21;&#x578B;&#x4F1A;&#x7EF4;&#x62A4;&#x4E00;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#xFF08;shadow variable&#xFF09;&#xFF0C;&#x8FD9;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#x5C31;&#x662F;&#x76F8;&#x5E94;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#xFF0C;&#x6BCF;&#x6B21;&#x8FD0;&#x884C;&#x65F6;&#xFF0C;&#x4F1A;&#x5BF9;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x503C;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x3002;</p>
-<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token triple-quoted-string string">&quot;&quot;&quot;
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token comment"># &#x5148;&#x751F;&#x6210;&#x4E00;&#x822C;&#x7F51;&#x7EDC;</span>
+y <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> weight<span class="token punctuation">)</span> <span class="token operator">+</span> biases<span class="token punctuation">)</span>
+
+<span class="token triple-quoted-string string">&quot;&quot;&quot;
 shadow_variable = decay * shadow_variable + (1 - decay) * variable
     decay:                  &#x8870;&#x51CF;&#x7387;&#xFF0C;&#x51B3;&#x5B9A;&#x66F4;&#x65B0;&#x901F;&#x5EA6;&#xFF08;&#x4E00;&#x822C;&#x4E3A;0.999&#x6216;0.9999&#xFF09;
     shadow_variable:        &#x5F71;&#x5B50;&#x53D8;&#x91CF;
     variable:               &#x5F85;&#x66F4;&#x65B0;&#x7684;&#x53D8;&#x91CF;
 &quot;&quot;&quot;</span>
-
 ema <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>ExponentialMovingAverage<span class="token punctuation">(</span>decay<span class="token operator">=</span>&#x8870;&#x51CF;&#x7387;<span class="token punctuation">,</span> num_updates<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span>
     <span class="token comment"># num_updates(optional):  &#x52A8;&#x6001;&#x8BBE;&#x7F6E;decay&#x5927;&#x5C0F;</span>
     <span class="token comment"># decay = min(decay, (1+num_updates)/(10+num_updates))</span>
@@ -362,15 +377,26 @@ ema <span class="token operator">=</span> tf<span class="token punctuation">.</s
 <span class="token comment"># &#x9700;&#x8981;&#x540C;&#x65F6;&#x8BAD;&#x7EC3;ema_op</span>
 ema_op <span class="token operator">=</span> ema<span class="token punctuation">.</span><span class="token builtin">apply</span><span class="token punctuation">(</span>tf<span class="token punctuation">.</span>trainable_variables<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-x <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> weight<span class="token punctuation">)</span> <span class="token operator">+</span> biases<span class="token punctuation">)</span>
-x <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>weight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>biases<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</pre><h2 class="mume-header" id="reuse">Reuse</h2>
+<span class="token comment"># &#x518D;&#x751F;&#x6210;EMA&#x7F51;&#x7EDC;</span>
+y <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>weight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>biases<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># &#x5B9A;&#x4E49;&#x4F18;&#x5316;&#x5668;</span>
+train_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>Optimizer<span class="token punctuation">(</span>learning_rate<span class="token punctuation">)</span><span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>loss<span class="token punctuation">)</span>
+train_ops <span class="token operator">=</span> <span class="token punctuation">[</span>train_op<span class="token punctuation">,</span> ema_op<span class="token punctuation">]</span>
+</pre><h2 class="mume-header" id="restore">Restore</h2>
 
 <blockquote>
-<p><a href="./src/demo-ModelReuse.py"><code>demo-ModelReuse.py</code></a></p>
+<p><a href="./src/demo-Restore.py"><code>demo-Restore.py</code></a></p>
 </blockquote>
-<p>&#x6A21;&#x578B;&#x590D;&#x7528;&#x4E0E;&#x52A0;&#x8F7D;&#x3002;</p>
-<h2 class="mume-header" id="tensorboard">TensorBoard</h2>
+<p>&#x6A21;&#x578B;&#x4FDD;&#x5B58;&#x4E0E;&#x590D;&#x7528;&#x3002;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token comment"># Saver&#x5FC5;&#x987B;&#x5728;&#x5B9A;&#x4E49;&#x5B8C;&#x7F51;&#x7EDC;&#x4E4B;&#x540E;&#x624D;&#x80FD;&#x5B9E;&#x4F8B;&#x5316;</span>
+saver <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>Saver<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token comment"># ...</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;Trained&quot;</span><span class="token punctuation">)</span>
+    saver<span class="token punctuation">.</span>save<span class="token punctuation">(</span>sess<span class="token punctuation">,</span> model_location<span class="token punctuation">)</span>
+</pre><h2 class="mume-header" id="tensorboard">TensorBoard</h2>
 
 <blockquote>
 <p><a href="./src/demo-TensorBoard.py"><code>demo-TensorBoard.py</code></a></p>
