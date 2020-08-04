@@ -1,4 +1,4 @@
 **
 !.gitignore
 !modules.xml
-!HelloDeepLearning.iml
+!HelloTensorflow.iml
