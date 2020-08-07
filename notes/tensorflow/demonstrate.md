@@ -175,17 +175,6 @@ y_pred = tf.matmul(
 ) + biases_output
 ```
 
-#### 运行效果
+**运行效果**
 
-##### 数据集
-
-![lstm_data](./images/lstm_data.png)
-
-##### 与训练数据拟合程度
-
-![lstm_train](./images/lstm_train.png)
-
-##### 与测试数据拟合程度
-
-![lstm_test](./images/lstm_test.png)
-
+![lstm_result](./images/lstm_result.png)

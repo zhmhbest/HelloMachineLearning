@@ -140,10 +140,10 @@ else:
         train_pred = std_y.inverse_transform(train_pred)
         train_true = std_y.inverse_transform(y_train)
 
-        plt.figure()
-        plt.plot(list(range(len(train_true))), train_true, color='r')
-        plt.plot(list(range(len(train_pred))), train_pred, color='b')
-        plt.show()
+        # plt.figure()
+        # plt.plot(list(range(len(train_true))), train_true, color='r')
+        # plt.plot(list(range(len(train_pred))), train_pred, color='b')
+        # plt.show()
 
         # test
         test_pred = []
@@ -156,7 +156,19 @@ else:
         test_pred = std_y.inverse_transform(test_pred)
         test_true = std_y.inverse_transform(y_test)
 
-        plt.figure()
-        plt.plot(list(range(len(test_true))), test_true, color='r')
-        plt.plot(list(range(len(test_pred))), test_pred, color='b')
+        # plt.figure()
+        # plt.plot(list(range(len(test_true))), test_true, color='r')
+        # plt.plot(list(range(len(test_pred))), test_pred, color='b')
+        # plt.show()
+
+        color_true_train = 'Gold'
+        color_true_test = 'Gold'
+        color_pred_train = '#FF69B4'
+        color_pred_test = '#AA69B4'
+
+        plt.figure(figsize=(36, 8), dpi=300)
+        plt.plot(list(range(len(train_true))), train_true, color=color_true_train)
+        plt.plot(list(range(len(train_pred))), train_pred, color=color_pred_train)
+        plt.plot(list(len(train_true) + i for i in range(len(test_true))), test_true, color=color_true_test)
+        plt.plot(list(len(train_pred) + i for i in range(len(test_pred))), test_pred, color=color_pred_test)
         plt.show()
