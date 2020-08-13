@@ -1,6 +1,5 @@
+import os
 import numpy as np
-import pandas as pd
-import math
 # 数据集
 from keras.datasets import cifar10
 # One-Hot
@@ -10,8 +9,7 @@ from keras.callbacks import EarlyStopping
 from keras.activations import relu, softmax
 from keras.losses import categorical_crossentropy
 from keras.metrics import categorical_accuracy
-
-from keras.models import Sequential, load_model, model_from_json
+from keras.models import Sequential, load_model
 from keras.constraints import maxnorm
 from keras.layers.core import (Dense, Dropout, Activation)
 """
@@ -19,6 +17,7 @@ from keras.layers.core import (Dense, Dropout, Activation)
     Dropout         : 用于正则化
     Activation      : 用于创建激活层
 """
+
 from keras.layers import (Flatten, Conv2D, MaxPooling2D)
 """
     Flatten         : 多维的输入一维化，想让与reshape((-1, ))
@@ -26,21 +25,10 @@ from keras.layers import (Flatten, Conv2D, MaxPooling2D)
     MaxPooling2D    : 池化层
 """
 
-
-def make_dump(dump_path):
-    """
-    创建缓存目录
-    """
-    import os
-    if os.path.exists(dump_path):
-        if not os.path.isdir(dump_path):
-            print(dump_path, "is not a valid path.")
-            exit(1)
-    else:
-        os.mkdir(dump_path)
-
-
-make_dump('./dump')
+DUMP_PATH = './dump'
+if not os.path.exists(DUMP_PATH):
+    os.makedirs(DUMP_PATH)
+MODEL_FILE = f"{DUMP_PATH}/model_cnn.h5"
 
 
 # 【数据载入】
@@ -86,42 +74,49 @@ NUM_CLASSES = Y_train.shape[1]
 # print(NUM_CLASSES)
 
 
-# 【模型定义】
-# ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-model = Sequential()
-model.add(Conv2D(16, (3, 3), input_shape=INPUT_SHAPE, padding='same', activation=relu, kernel_constraint=maxnorm(3)))
-model.add(Conv2D(16, (3, 3), activation=relu, padding='same', kernel_constraint=maxnorm(3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Flatten())
-model.add(Dense(128, activation=relu, kernel_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Dense(32, activation=relu, kernel_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Dense(10, activation=softmax))
+if os.path.exists(MODEL_FILE):
+    # 【模型加载】
+    # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
+    model = load_model(MODEL_FILE)
+else:
+    # 【模型定义】
+    # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
+    model = Sequential()
+    model.add(Conv2D(16, (3, 3), input_shape=INPUT_SHAPE, padding='same', activation=relu, kernel_constraint=maxnorm(3)))
+    model.add(Conv2D(16, (3, 3), activation=relu, padding='same', kernel_constraint=maxnorm(3)))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Flatten())
+    model.add(Dense(128, activation=relu, kernel_constraint=maxnorm(3)))
+    model.add(Dropout(0.2))
+    model.add(Dense(32, activation=relu, kernel_constraint=maxnorm(3)))
+    model.add(Dropout(0.2))
+    model.add(Dense(10, activation=softmax))
 
+    # 【模型编译】
+    # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
+    # 定义：损失函数、优化器
+    model.compile(
+        loss=categorical_crossentropy,
+        optimizer=adam(lr=0.01),
+        metrics=[categorical_accuracy]
+    )
 
-# 【模型编译】
-# ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-# 定义：损失函数、优化器
-model.compile(
-    loss=categorical_crossentropy,
-    optimizer=adam(lr=0.01),
-    metrics=[categorical_accuracy]
-)
+    # 【模型训练】
+    # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
+    model.fit(
+        X_train, Y_train,
+        batch_size=1000,                    # 每组数量
+        epochs=8,                           # 循环次数
+        validation_data=(X_test, Y_test),
+        callbacks=[
+            EarlyStopping(patience=2),      # 出现梯度爆炸或消失时停止训练
+        ]
+    )
 
-
-# 【模型训练】
-# ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-model.fit(
-    X_train, Y_train,
-    batch_size=1000,                    # 每组数量
-    epochs=8,                           # 循环次数
-    validation_data=(X_test, Y_test),
-    callbacks=[
-        EarlyStopping(patience=2),      # 出现梯度爆炸或消失时停止训练
-    ]
-)
+    # 【保存模型】
+    # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
+    model.save(MODEL_FILE)
 
 
 # 【模型评估】
@@ -135,40 +130,3 @@ print("score[loss, accuracy] =", score)
 result = model.predict_classes(X_test)
 print(y_test.reshape((-1,))[:10])
 print(result[:10])
-
-
-# 【保存模型】
-# ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-model.save("./dump/model.h5")
-
-"""【模型结构、模型参数、优化器参数】
-    # 保存
-    model.save("./dump/model.h5")
-
-    # 加载
-    model = load_model("./dump/model.h5")
-"""
-
-"""【模型结构】
-    # 保存
-    with open("./dump/struct.json", "w") as f:
-        f.write(model.to_json())
-
-    # 加载 (返回未编译的模型)
-    with open("./dump/struct.json", "r") as f:
-        json_str = ''.join(f.readlines())
-        model = model_from_json(json_str)
-"""
-
-"""【模型参数】
-    # 保存
-    model.save_weights("./dump/model_weights.h5")
-
-    # 加载（不能继续训练模型）
-    model_weights = model.load_weights("./dump/model_weights.h5")
-"""
-
-
-# 【总结模型】
-# ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-model.summary()  # 打印模型结构

@@ -1,8 +1,10 @@
 import numpy as np
-from keras.models import Sequential
-from keras.models import (load_model, model_from_json)
-from keras.layers.core import (Dense, Activation)
+from keras.models import Sequential, load_model
+from keras.layers import (Dense, Activation)
+from keras.metrics import categorical_accuracy, mae, mse
+from keras.losses import mean_squared_error
 from keras.optimizers import sgd
+from keras.callbacks import Callback as keras_Callback
 from matplotlib import pyplot
 import os
 DUMP_PATH = './dump'
@@ -38,24 +40,38 @@ else:
     model.add(Dense(1))
     model.add(Activation('tanh'))
     model.compile(
-        loss='mse',
-        optimizer=sgd(lr=0.1)
+        loss=mean_squared_error,
+        optimizer=sgd(lr=0.1),
+        metrics=[
+            mse, mae
+        ]
     )
-
     """
         模型训练（首次）
     """
-    for step in range(2000):
-        loss_val = model.train_on_batch(x_data, y_data)
-        if 0 == step % 200:
-            print('loss:', loss_val)
-
+    class FitCall(keras_Callback):
+        def on_epoch_begin(self, epoch, logs=None):
+            print('epoch =', epoch)
+    model.fit(
+        x_data, y_data,  # 训练数据
+        # validation_data=(x_test, y_test),  # 评估用
+        batch_size=32, epochs=500,
+        verbose=0,  # 0,1,2 = 无、进度条、第几轮
+        callbacks=[
+            FitCall()
+        ]
+    )
     """
-        模型评估与保存（首次）
+        模型保存（首次）
     """
-    score = model.evaluate(x_data, y_data, verbose=0)
-    print("score[loss] =", score)
     model.save(MODEL_FILE)
+
+
+"""
+    模型评估
+"""
+score = model.evaluate(x_data, y_data, batch_size=32, verbose=0)
+print("score[loss, mse, mae] =", score)
 
 
 """
