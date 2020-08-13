@@ -31,3 +31,15 @@
 ### [Demonstrate](./tensorflow/demonstrate.html)
 
 ## [Keras](./keras/index.html)
+
+### [定义](./keras/index.html#定义)
+
+### [编译](./keras/index.html#编译)
+
+### [训练](./keras/index.html#训练)
+
+### [评估](./keras/index.html#评估)
+
+### [预测](./keras/index.html#预测)
+
+### [保存](./keras/index.html#保存)
