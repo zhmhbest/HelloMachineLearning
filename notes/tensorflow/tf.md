@@ -435,7 +435,7 @@ y_elu = np.array([alpha_elu*(np.exp(item)-1) if item < 0 else item for item in x
 
 plt.figure(dpi=600)
 
-plt.plot(x, 8+y_sigmoid, label='Sigmod (+8)')
+plt.plot(x, 8+y_sigmoid, label='Sigmoid (+8)')
 plt.plot(x, 6+y_tanh, label='Tanh (+6)')
 plt.plot(x, 4+y_relu, label='Relu (+4)')
 plt.plot(x, 2+y_leaky_relu, label='Leaky Relu (+2)')
