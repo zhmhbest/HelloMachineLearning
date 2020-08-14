@@ -79,7 +79,7 @@ if os.path.exists(MODEL_FILE):
     # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
     model = load_model(MODEL_FILE)
 else:
-    # 【模型定义】
+    # 【模型定义（首次）】
     # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
     model = Sequential()
     model.add(Conv2D(16, (3, 3), input_shape=INPUT_SHAPE, padding='same', activation=relu, kernel_constraint=maxnorm(3)))
@@ -93,7 +93,7 @@ else:
     model.add(Dropout(0.2))
     model.add(Dense(10, activation=softmax))
 
-    # 【模型编译】
+    # 【模型编译（首次）】
     # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
     # 定义：损失函数、优化器
     model.compile(
@@ -102,19 +102,19 @@ else:
         metrics=[categorical_accuracy]
     )
 
-    # 【模型训练】
+    # 【模型训练（首次）】
     # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
     model.fit(
         X_train, Y_train,
         batch_size=1000,                    # 每组数量
-        epochs=8,                           # 循环次数
+        epochs=20,                          # 循环次数
         validation_data=(X_test, Y_test),
         callbacks=[
             EarlyStopping(patience=2),      # 出现梯度爆炸或消失时停止训练
         ]
     )
 
-    # 【保存模型】
+    # 【保存模型（首次）】
     # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
     model.save(MODEL_FILE)
 
@@ -127,6 +127,7 @@ print("score[loss, accuracy] =", score)
 
 # 【预测】
 # ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■ ■■■■■■■■■■■■■■■■
-result = model.predict_classes(X_test)
-print(y_test.reshape((-1,))[:10])
-print(result[:10])
+# y_pred = model.predict(X_test)
+y_pred = model.predict_classes(X_test)
+print(y_test[:10].reshape((-1,)))
+print(y_pred[:10])
