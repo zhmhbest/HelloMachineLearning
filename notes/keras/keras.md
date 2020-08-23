@@ -86,11 +86,10 @@ model2 = Model(inputs=inputs, outputs=y)
 #### 混合模型
 
 ```py
+from keras.models import Sequential, Model
+from keras.layers import Dense, Activation, Lambda
 from keras.backend import concatenate
-from keras.models import Sequential
-from keras.layers import Dense, Activation
 
-# 不包括batch_size
 INPUT_SHAPE_A = (32,)
 INPUT_SHAPE_B = (128,)
 
@@ -106,15 +105,13 @@ partB.add(Activation('relu'))
 partB.add(Dense(16))
 print(partB.input.shape, partB.output.shape)
 
-combined = concatenate([partA.output, partB.output])
-next_shape = (lambda x: (x.pop(0), tuple(x)))(combined.shape.as_list())[1]
-print(combined.shape, next_shape)
+x = Lambda(lambda inputs: concatenate(inputs))([partA.output, partB.output])
+x = Dense(2)(x)
+x = Activation('relu')(x)
+x = Dense(1)(x)
 
-model = Sequential()
-model.add(Dense(2, input_shape=next_shape))
-model.add(Activation('relu'))
-model.add(Dense(1))
-print(model.input.shape, model.output.shape)
+model = Model(inputs=[partA.input, partB.input], outputs=x)
+print(model)
 ```
 
 ### 编译模型
