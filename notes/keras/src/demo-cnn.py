@@ -18,11 +18,33 @@ from keras.layers.core import (Dense, Dropout, Activation)
     Activation      : 用于创建激活层
 """
 
-from keras.layers import (Flatten, Conv2D, MaxPooling2D)
+from keras.layers import (Conv2D, MaxPooling2D, Flatten)
 """
-    Flatten         : 多维的输入一维化，想让与reshape((-1, ))
     Conv2D          : 卷积层
+        filters         : {int} 过滤器输出深度
+        kernel_size     : {int | (int, int)} 过滤器窗口尺寸
+        strides         : {int | (int, int)} 过滤器过滤步长
+        padding         : {'valid' | 'same'} 过滤器模式
+            valid = 无填充
+            same  = 填充输入，使输出与原始输入的长度相同
+        data_format     : {'channels_last' | 'channels_first'} 数据格式
+            channels_last , input_shape=(samples, rows, cols, channels)
+            channels_first, input_shape=(samples, channels, rows, cols)
+        dilation_rate   : {int | (int, int)} 过滤器扩展
+        activation      : {str | keras.activations.?} 激活函数
+        use_bias        : {bool} 是否使用偏置
+
     MaxPooling2D    : 池化层
+        pool_size       : {int | (int, int)} 池化窗口尺寸
+        strides         : {int | (int, int)} 池化步长
+        padding         : {'valid' | 'same'} 池化模式
+        data_format     : {'channels_last' | 'channels_first'} 数据格式
+            channels_last , input_shape=(batch_size, rows, cols, channels)
+            channels_first, input_shape=(batch_size, channels, rows, cols)
+
+    Flatten         : 多维的输入一维化，相当于reshape((-1, ))
+        input_shape=(None, ..., ...., ...)
+        output_shape=(None, ...)
 """
 
 DUMP_PATH = './dump'
