@@ -30,7 +30,7 @@
 
 ### [Demonstrate](./tensorflow/demonstrate.html)
 
-## [Keras](./keras/index.html)
+## [Keras](./keras/keras.html)
 
 ### [Hello](./keras/keras.html#hello)
 
