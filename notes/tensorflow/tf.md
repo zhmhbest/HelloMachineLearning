@@ -598,24 +598,41 @@ with tf.Session().as_default():
 
 ### 分类问题
 
-**测试数据**
-
-```py
-y_true = tf.constant([
-    1, 1, 0, 0, 1
-], dtype=tf.float32, name='y_true')
-
-y_pred = tf.constant([
-    1, 1, 0, 1, 1
-], dtype=tf.float32, name='y_pred')
-```
-
 #### Cross Entropy
 
 $$\mathrm{CEH}(p, q) = -\sum_{x∈X} p(x)\log q(x)$$
 
+**模拟自带CE**
+
+```py
+import tensorflow as tf
+
+
+with tf.Session() as sess:
+    epsilon = 1e-7
+
+    loss1 = tf.losses.log_loss(y_true, y_pred, epsilon=epsilon, reduction=tf.losses.Reduction.MEAN)
+    print('log_loss', sess.run(loss1))
+
+    loss2 = -tf.reduce_mean(
+        y_true * tf.log(y_pred + epsilon) +
+        (1 - y_true) * tf.log(1 - y_pred + epsilon)
+    )
+    print('+epsilon', sess.run(loss2))
+
+    loss3 = -tf.reduce_mean(
+        y_true * tf.log(tf.clip_by_value(y_pred, epsilon, 1))
+        +
+        (1 - y_true) * tf.log(tf.clip_by_value(1 - y_pred, epsilon, 1))
+    )
+    print('clip__by', sess.run(loss3))
+```
+
+**自定义CE**
+
 ```py
 import numpy as np
+import tensorflow as tf
 
 
 def to_probability(y, epsilon):
@@ -625,40 +642,68 @@ def to_probability(y, epsilon):
     :param epsilon:
     :return:
     """
-    y = np.clip(y, epsilon, 1. - epsilon)
-    if 1 == y.ndim:
-        y = y[:, np.newaxis]
+    if isinstance(y, tf.Tensor):
+        __fun_reshape = tf.reshape
+        __fun_clip = tf.clip_by_value
+        __fun_sum = tf.reduce_sum
+        __fun_concat = (lambda x1, x2: tf.concat([x1, x2], axis=1))
+    else:
+        __fun_reshape = np.reshape
+        __fun_clip = np.clip
+        __fun_sum = np.sum
+        __fun_concat = (lambda x1, x2: np.hstack([x1, x2]))
+
+    y = __fun_clip(y, epsilon, 1. - epsilon)
+    if 1 == len(y.shape):
+        y = __fun_reshape(y, (-1, 1))
     if 1 == y.shape[-1]:
-        y = np.hstack([y, 1-y])
-    return y / np.sum(y, axis=len(y.shape) - 1, keepdims=True)
+        y = __fun_concat(y, 1-y)
+    return y / __fun_sum(y, axis=len(y.shape) - 1, keepdims=True)
 
 
 def cross_entropy(y_true, y_pred, epsilon=None):
     assert y_true.shape == y_pred.shape
     epsilon = 1e-7 if epsilon is None else epsilon
+    if isinstance(y_true, list):
+        y_true = np.array(y_true)
+    if isinstance(y_pred, list):
+        y_pred = np.array(y_pred)
+    if isinstance(y_true, tf.Tensor):
+        __fun_log = tf.log
+        __fun_sum = tf.reduce_sum
+        __fun_float64 = (lambda x: tf.cast(x, tf.float64))
+    else:
+        __fun_log = np.log
+        __fun_sum = np.sum
+        __fun_float64 = (lambda x: x.astype(np.float64))
+    if y_true.dtype != y_pred.dtype:
+        y_true = __fun_float64(y_true)
+        y_pred = __fun_float64(y_pred)
+    y_true = __fun_float64(y_true)
     y_pred = to_probability(y_pred, epsilon)
+
     return (
         # binary_cross_entropy
         -(
-            y_true * np.log(y_pred[:, 0]) + (1. - y_true) * np.log(y_pred[:, 1])
+            y_true * __fun_log(y_pred[:, 0]) + (1. - y_true) * __fun_log(y_pred[:, 1])
         )
-        if 1 == y_true.ndim or 1 == y_true.shape[-1] else
+        if 1 == len(y_true.shape) or 1 == y_true.shape[-1] else
         # categorical_cross_entropy
-        (
-            -np.sum(y_true * np.log(y_pred), axis=len(y_pred.shape) - 1)
+        -(
+            __fun_sum(y_true * __fun_log(y_pred), axis=len(y_pred.shape) - 1)
         )
     )
 
-```
 
-```py
-loss1 = tf.reduce_mean(tf.losses.log_loss(y_true, y_pred))
-loss2 = tf.reduce_mean(cross_entropy(y_true, y_pred))
-
-
-with tf.Session().as_default():
-    print(loss1.eval())
-    print(loss2.eval())
+if __name__ == '__main__':
+    from sklearn.metrics import log_loss
+    # y_true = ...
+    # y_pred = ...
+    with tf.Session() as sess:
+        _epsilon = 1e-7
+        print(log_loss(_true, _pred, eps=_epsilon, normalize=False))
+        print(np.sum(cross_entropy(_true, _pred, _epsilon)))
+        print(np.sum(sess.run(cross_entropy(tf.constant(_true), tf.constant(_pred), _epsilon))))
 ```
 
 #### Sigmoid Cross Entropy
