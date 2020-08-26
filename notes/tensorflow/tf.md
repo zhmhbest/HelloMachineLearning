@@ -615,13 +615,40 @@ y_pred = tf.constant([
 $$\mathrm{CEH}(p, q) = -\sum_{x∈X} p(x)\log q(x)$$
 
 ```py
-def cross_entropy(labels, predictions, epsilon=1e-7):
-    # 虽然公式是Sum，但一般求Mean
-    return -np.mean(
-            labels * tf.log(tf.clip_by_value(predictions, epsilon, 1.0))
-            +
-            (1 - labels) * tf.log(tf.clip_by_value(1 - predictions, epsilon, 1.0))
+import numpy as np
+
+
+def to_probability(y, epsilon):
+    """
+    转换为概率分布
+    :param y:
+    :param epsilon:
+    :return:
+    """
+    y = np.clip(y, epsilon, 1. - epsilon)
+    if 1 == y.ndim:
+        y = y[:, np.newaxis]
+    if 1 == y.shape[-1]:
+        y = np.hstack([y, 1-y])
+    return y / np.sum(y, axis=len(y.shape) - 1, keepdims=True)
+
+
+def cross_entropy(y_true, y_pred, epsilon=None):
+    assert y_true.shape == y_pred.shape
+    epsilon = 1e-7 if epsilon is None else epsilon
+    y_pred = to_probability(y_pred, epsilon)
+    return (
+        # binary_cross_entropy
+        -(
+            y_true * np.log(y_pred[:, 0]) + (1. - y_true) * np.log(y_pred[:, 1])
+        )
+        if 1 == y_true.ndim or 1 == y_true.shape[-1] else
+        # categorical_cross_entropy
+        (
+            -np.sum(y_true * np.log(y_pred), axis=len(y_pred.shape) - 1)
+        )
     )
+
 ```
 
 ```py
