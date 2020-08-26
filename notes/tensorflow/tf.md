@@ -532,18 +532,6 @@ def stablesoftmax(x):
 
 ### 回归问题
 
-**测试数据**
-
-```py
-y_true = tf.constant([
-    12, 23, 94, 37
-], dtype=tf.float32, name='y_true')  # mean=41.5
-
-y_pred = tf.constant([
-    24, 32, 66, 53
-], dtype=tf.float32, name='y_pred')  # mean=43.75
-```
-
 #### 均方误差（MSE）
 
 $$\mathrm{MSE}(y, f(x)) = \dfrac{\sum\limits_{i=1}^{n}(y_i-f(x_i))^2}{n}$$
@@ -708,14 +696,18 @@ if __name__ == '__main__':
 
 #### Sigmoid Cross Entropy
 
-```py
-loss1 = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true, logits=y_pred))
-# tf.nn.sigmoid(y_pred) = 1.0/(1+tf.exp(-y_pred)
-loss2 = tf.reduce_mean(tf.losses.log_loss(y_true, tf.nn.sigmoid(y_pred)))
+先求Sigmoid再求CrossEntropy，适用于二分类问题。
 
-with tf.Session().as_default():
-    print(loss1.eval())
-    print(loss2.eval())
+```py
+loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true, logits=y_pred))
+```
+
+#### Softmax Cross Entropy
+
+先求Softmax再求CrossEntropy，适用于多分类问题。
+
+```py
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred))
 ```
 
 ## Optimizer
