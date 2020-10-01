@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>tf</title>
+      <title>index</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -11,7 +11,7 @@
       
       
       
-      
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.7.0/flowchart.min.js"></script>
       
       <style>
       /**
@@ -350,6 +350,24 @@ pre[data-line] .line-highlight[data-end]:after {
 <li><a href="#adam">Adam</a></li>
 </ul>
 </li>
+<li><a href="#demonstrate">Demonstrate</a>
+<ul>
+<li><a href="#hello-1">Hello</a></li>
+<li><a href="#learning-rate">Learning Rate</a></li>
+<li><a href="#fitting">Fitting</a>
+<ul>
+<li><a href="#%E6%AC%A0%E6%8B%9F%E5%90%88">&#x6B20;&#x62DF;&#x5408;</a></li>
+<li><a href="#%E8%BF%87%E6%8B%9F%E5%90%88">&#x8FC7;&#x62DF;&#x5408;</a></li>
+<li><a href="#%E6%8B%9F%E5%90%88l2%E6%AD%A3%E5%88%99%E5%8C%96">&#x62DF;&#x5408;&#xFF08;L2&#x6B63;&#x5219;&#x5316;&#xFF09;</a></li>
+</ul>
+</li>
+<li><a href="#moving">Moving</a></li>
+<li><a href="#restore">Restore</a></li>
+<li><a href="#tensorboard-1">TensorBoard</a></li>
+<li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
+<li><a href="#recurrent-neural-network">Recurrent Neural Network</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -611,7 +629,7 @@ result <span class="token operator">=</span> a <span class="token operator">+</s
 <span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>graph <span class="token keyword">is</span> g0<span class="token punctuation">)</span>
 </pre><h3 class="mume-header" id="%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE">&#x81EA;&#x5B9A;&#x4E49;&#x56FE;</h3>
 
-<pre data-role="codeBlock" data-info="py" class="language-python">g0 <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> 
+<pre data-role="codeBlock" data-info="py" class="language-python">g0 <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
 g1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;g0 is default?&quot;</span><span class="token punctuation">,</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">is</span> g0<span class="token punctuation">)</span>               <span class="token comment"># True</span>
 <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;g1 is default?&quot;</span><span class="token punctuation">,</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">is</span> g1<span class="token punctuation">)</span>               <span class="token comment"># False</span>
@@ -627,7 +645,7 @@ g1 <span class="token operator">=</span> tf<span class="token punctuation">.</sp
 <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;g1 is default?&quot;</span><span class="token punctuation">,</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">is</span> g1<span class="token punctuation">)</span>               <span class="token comment"># False</span>
 </pre><h3 class="mume-header" id="%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%B9%B6%E8%BF%90%E8%A1%8C%E4%BC%9A%E8%AF%9D">&#x81EA;&#x5B9A;&#x4E49;&#x56FE;&#x5E76;&#x8FD0;&#x884C;&#x4F1A;&#x8BDD;</h3>
 
-<pre data-role="codeBlock" data-info="py" class="language-python">g0 <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> 
+<pre data-role="codeBlock" data-info="py" class="language-python">g0 <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
 g2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">with</span> g2<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;\t&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;g2 is default?&quot;</span><span class="token punctuation">,</span> tf<span class="token punctuation">.</span>get_default_graph<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">is</span> g2<span class="token punctuation">)</span>           <span class="token comment"># True</span>
@@ -967,7 +985,160 @@ loss_mae2 <span class="token operator">=</span> tf<span class="token punctuation
 
 <p>&#x76F8;&#x5F53;&#x4E8E;RMSprop + Momentum&#xFF0C;&#x8BAD;&#x7EC3;&#x8FC7;&#x7A0B;&#x5C31;&#x50CF;&#x662F;&#x4E00;&#x4E2A;&#x5E26;&#x6709;&#x6469;&#x64E6;&#x7684;&#x6C89;&#x91CD;&#x7684;&#x7403;&#x3002;</p>
 <pre data-role="codeBlock" data-info="py" class="language-python">train_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>AdamOptimizer<span class="token punctuation">(</span>learning_rate<span class="token punctuation">,</span> beta1<span class="token operator">=</span><span class="token number">0.9</span><span class="token punctuation">,</span> beta2<span class="token operator">=</span><span class="token number">0.999</span><span class="token punctuation">,</span> epsilon<span class="token operator">=</span><span class="token number">1e</span><span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>loss_function<span class="token punctuation">)</span>
-</pre>
+</pre><h2 class="mume-header" id="demonstrate">Demonstrate</h2>
+
+<h3 class="mume-header" id="hello-1">Hello</h3>
+
+<blockquote>
+<p><a href="./src/demo-Hello.py"><code>demo-Hello.py</code></a></p>
+</blockquote>
+<div class="flow">st=&gt;start: &#x5F00;&#x59CB;
+datasets=&gt;inputoutput: &#x5BFC;&#x5165;&#x6570;&#x636E;
+networks=&gt;operation: &#x5B9A;&#x4E49;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;
+loss=&gt;operation: &#x5B9A;&#x4E49;&#x635F;&#x5931;&#x51FD;&#x6570;
+optimizer=&gt;operation: &#x5B9A;&#x4E49;&#x4F18;&#x5316;&#x5668;
+training=&gt;operation: &#x8BAD;&#x7EC3;
+ed=&gt;end: &#x7ED3;&#x675F;
+
+st-&gt;datasets-&gt;networks-&gt;loss-&gt;optimizer-&gt;training-&gt;ed
+</div><h3 class="mume-header" id="learning-rate">Learning Rate</h3>
+
+<blockquote>
+<p><a href="./src/demo-LearningRate.py"><code>demo-LearningRate.py</code></a></p>
+</blockquote>
+<p>&#x5B66;&#x4E60;&#x7387;&#x65E2;&#x4E0D;&#x80FD;&#x8FC7;&#x5927;&#xFF0C;&#x4E5F;&#x4E0D;&#x80FD;&#x8FC7;&#x5C0F;&#x3002; &#x8FC7;&#x5C0F;&#xFF1A;&#x8BAD;&#x7EC3;&#x901F;&#x5EA6;&#x6162;&#xFF1B;&#x8FC7;&#x5927;&#xFF1A;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x6A21;&#x578B;&#x9707;&#x8361;&#x3002;</p>
+<p><strong>&#x6307;&#x6570;&#x8870;&#x51CF;&#x6CD5;</strong>&#x5219;&#x53EF;&#x5F88;&#x597D;&#x7684;&#x89E3;&#x51B3;&#x4E0A;&#x8FF0;&#x95EE;&#x9898;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token triple-quoted-string string">&quot;&quot;&quot;
+learning_rate = initial_learning_rate * decay_rate ^ (global_step / decay_steps)
+    learning_rate        : &#x6BCF;&#x8F6E;&#x5B9E;&#x9645;&#x4F7F;&#x7528;&#x7684;&#x5B66;&#x4E60;&#x7387;
+    initial_learning_rate: &#x521D;&#x59CB;&#x5B66;&#x4E60;&#x7387;
+    global_step          : tf.Variable(0, trainable=False)
+    decay_steps          : &#x8870;&#x51CF;&#x901F;&#x5EA6;
+    decay_rate           : &#x8870;&#x51CF;&#x7CFB;&#x6570;
+    staircase            : &#x662F;&#x5426;&#x4EE5;&#x79BB;&#x6563;&#x95F4;&#x9694;&#x8870;&#x51CF;&#x5B66;&#x4E60;&#x901F;&#x7387;
+
+global_step&#x4E3A;&#x56FA;&#x5B9A;&#x5199;&#x6CD5;&#xFF0C;&#x7528;&#x4EE5;&#x8BB0;&#x5F55;&#x8BAD;&#x7EC3;&#x6B21;&#x6570;
+staircase&#x4E3A;&#x771F;&#x65F6;(global_step / decay_steps)&#x7684;&#x503C;&#x4F1A;&#x88AB;&#x8F6C;&#x5316;&#x4E3A;&#x6574;&#x6570;
+&quot;&quot;&quot;</span>
+decayed_learning_rate <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>exponential_decay<span class="token punctuation">(</span>
+    initial_learning_rate<span class="token punctuation">,</span>
+    global_step<span class="token punctuation">,</span>
+    decay_steps<span class="token punctuation">,</span>
+    decay_rate<span class="token punctuation">,</span>
+    staircase<span class="token operator">=</span><span class="token boolean">False</span>
+<span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="fitting">Fitting</h3>
+
+<blockquote>
+<p><a href="./src/demo-Fitting.py"><code>demo-Fitting.py</code></a></p>
+</blockquote>
+<p>&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x5316;&#x907F;&#x514D;&#x8FC7;&#x62DF;&#x5408;&#x3002;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>contrib<span class="token punctuation">.</span>layers <span class="token keyword">import</span> l2_regularizer
+
+<span class="token comment"># &#x5B9A;&#x4E49;&#x6B63;&#x5219;&#x5316;&#x65B9;&#x6CD5;&#xFF0C;&#x8BBE;&#x7F6E;&#x6B63;&#x5219;&#x5316;&#x529B;&#x5EA6;</span>
+l2_regularizer <span class="token operator">=</span> l2_regularizer<span class="token punctuation">(</span>REGULARIZATION_RATE<span class="token punctuation">)</span>
+
+<span class="token comment"># &#x6536;&#x96C6;&#x6BCF;&#x4E2A;&#x6743;&#x91CD;&#x7684;&#x4FE1;&#x606F;</span>
+tf<span class="token punctuation">.</span>add_to_collection<span class="token punctuation">(</span><span class="token string">&apos;losses&apos;</span><span class="token punctuation">,</span> l2_regularizer<span class="token punctuation">(</span>weights<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># &#x5728;&#x539F;&#x635F;&#x5931;&#x51FD;&#x6570;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#x6784;&#x5EFA;&#x6B63;&#x5219;&#x5316;&#x635F;&#x5931;&#x51FD;&#x6570;</span>
+loss_l2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>add_n<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>get_collection<span class="token punctuation">(</span><span class="token string">&apos;losses&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> loss
+
+<span class="token comment"># &#x4F7F;&#x7528;&#x6B63;&#x5219;&#x5316;&#x540E;&#x7684;&#x635F;&#x5931;&#x51FD;&#x6570;&#x4F5C;&#x4E3A;&#x4E0B;&#x964D;&#x65B9;&#x5411;</span>
+train_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>AdamOptimizer<span class="token punctuation">(</span>LEARNING_RATE<span class="token punctuation">)</span><span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>loss_l2<span class="token punctuation">)</span>
+</pre><h4 class="mume-header" id="%E6%AC%A0%E6%8B%9F%E5%90%88">&#x6B20;&#x62DF;&#x5408;</h4>
+
+<p><img src="./images/fitting_1.png" alt></p>
+<h4 class="mume-header" id="%E8%BF%87%E6%8B%9F%E5%90%88">&#x8FC7;&#x62DF;&#x5408;</h4>
+
+<p><img src="./images/fitting_2.png" alt></p>
+<h4 class="mume-header" id="%E6%8B%9F%E5%90%88l2%E6%AD%A3%E5%88%99%E5%8C%96">&#x62DF;&#x5408;&#xFF08;L2&#x6B63;&#x5219;&#x5316;&#xFF09;</h4>
+
+<p><img src="./images/fitting_3.png" alt></p>
+<h3 class="mume-header" id="moving">Moving</h3>
+
+<blockquote>
+<p><a href="./src/demo-Moving.py"><code>demo-Moving.py</code></a></p>
+</blockquote>
+<p>&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x7528;&#x6765;&#x4F30;&#x8BA1;&#x53D8;&#x91CF;&#x7684;&#x5C40;&#x90E8;&#x5747;&#x503C;&#xFF0C;&#x4F7F;&#x5F97;&#x53D8;&#x91CF;&#x7684;&#x66F4;&#x65B0;&#x4E0E;&#x4E00;&#x6BB5;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x5386;&#x53F2;&#x53D6;&#x503C;&#x6709;&#x5173;&#x3002;<br>
+&#x5728;&#x91C7;&#x7528;&#x968F;&#x673A;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7B97;&#x6CD5;&#x8BAD;&#x7EC3;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x65F6;&#xFF0C;&#x4F7F;&#x7528;&#x6ED1;&#x52A8;&#x5E73;&#x5747;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x5728;&#x4E00;&#x5B9A;&#x7A0B;&#x5EA6;&#x63D0;&#x9AD8;&#x6700;&#x7EC8;&#x6A21;&#x578B;&#x5728;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#x4E0A;&#x7684;&#x8868;&#x73B0;&#x3002;</p>
+<p>&#x8BE5;&#x6A21;&#x578B;&#x4F1A;&#x7EF4;&#x62A4;&#x4E00;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#xFF08;shadow variable&#xFF09;&#xFF0C;&#x8FD9;&#x4E2A;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#x5C31;&#x662F;&#x76F8;&#x5E94;&#x53D8;&#x91CF;&#x7684;&#x521D;&#x59CB;&#x503C;&#xFF0C;&#x6BCF;&#x6B21;&#x8FD0;&#x884C;&#x65F6;&#xFF0C;&#x4F1A;&#x5BF9;&#x5F71;&#x5B50;&#x53D8;&#x91CF;&#x7684;&#x503C;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#x3002;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token comment"># &#x5148;&#x751F;&#x6210;&#x4E00;&#x822C;&#x7F51;&#x7EDC;</span>
+y <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> weight<span class="token punctuation">)</span> <span class="token operator">+</span> biases<span class="token punctuation">)</span>
+
+<span class="token triple-quoted-string string">&quot;&quot;&quot;
+shadow_variable = decay * shadow_variable + (1 - decay) * variable
+    decay:                  &#x8870;&#x51CF;&#x7387;&#xFF0C;&#x51B3;&#x5B9A;&#x66F4;&#x65B0;&#x901F;&#x5EA6;&#xFF08;&#x4E00;&#x822C;&#x4E3A;0.999&#x6216;0.9999&#xFF09;
+    shadow_variable:        &#x5F71;&#x5B50;&#x53D8;&#x91CF;
+    variable:               &#x5F85;&#x66F4;&#x65B0;&#x7684;&#x53D8;&#x91CF;
+&quot;&quot;&quot;</span>
+ema <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>ExponentialMovingAverage<span class="token punctuation">(</span>decay<span class="token operator">=</span>&#x8870;&#x51CF;&#x7387;<span class="token punctuation">,</span> num_updates<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span>
+    <span class="token comment"># num_updates(optional):  &#x52A8;&#x6001;&#x8BBE;&#x7F6E;decay&#x5927;&#x5C0F;</span>
+    <span class="token comment"># decay = min(decay, (1+num_updates)/(10+num_updates))</span>
+
+<span class="token comment"># &#x9700;&#x8981;&#x540C;&#x65F6;&#x8BAD;&#x7EC3;ema_op</span>
+ema_op <span class="token operator">=</span> ema<span class="token punctuation">.</span><span class="token builtin">apply</span><span class="token punctuation">(</span>tf<span class="token punctuation">.</span>trainable_variables<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># &#x518D;&#x751F;&#x6210;EMA&#x7F51;&#x7EDC;</span>
+y <span class="token operator">=</span> activation<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>x<span class="token punctuation">,</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>weight<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> ema<span class="token punctuation">.</span>average<span class="token punctuation">(</span>biases<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># &#x5B9A;&#x4E49;&#x4F18;&#x5316;&#x5668;</span>
+train_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>Optimizer<span class="token punctuation">(</span>learning_rate<span class="token punctuation">)</span><span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>loss<span class="token punctuation">)</span>
+train_ops <span class="token operator">=</span> <span class="token punctuation">[</span>train_op<span class="token punctuation">,</span> ema_op<span class="token punctuation">]</span>
+</pre><h3 class="mume-header" id="restore">Restore</h3>
+
+<blockquote>
+<p><a href="./src/demo-Restore.py"><code>demo-Restore.py</code></a></p>
+</blockquote>
+<p>&#x6A21;&#x578B;&#x4FDD;&#x5B58;&#x4E0E;&#x590D;&#x7528;&#x3002;</p>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token comment"># Saver&#x5FC5;&#x987B;&#x5728;&#x5B9A;&#x4E49;&#x5B8C;&#x7F51;&#x7EDC;&#x4E4B;&#x540E;&#x624D;&#x80FD;&#x5B9E;&#x4F8B;&#x5316;</span>
+saver <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>Saver<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token comment"># ...</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;Trained&quot;</span><span class="token punctuation">)</span>
+    saver<span class="token punctuation">.</span>save<span class="token punctuation">(</span>sess<span class="token punctuation">,</span> model_location<span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="tensorboard-1">TensorBoard</h3>
+
+<blockquote>
+<p><a href="./src/demo-TensorBoard.py"><code>demo-TensorBoard.py</code></a></p>
+</blockquote>
+<p>&#x53EF;&#x89C6;&#x5316;&#x9884;&#x89C8;&#x6A21;&#x578B;&#x3002;</p>
+<h3 class="mume-header" id="convolutional-neural-networks">Convolutional Neural Networks</h3>
+
+<blockquote>
+<p><a href="./src/demo-CNN.py"><code>demo-CNN.py</code></a></p>
+</blockquote>
+<p>&#x80FD;&#x591F;&#x6309;&#x5176;&#x9636;&#x5C42;&#x7ED3;&#x6784;&#x5BF9;&#x8F93;&#x5165;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5E73;&#x79FB;&#x4E0D;&#x53D8;&#x5206;&#x7C7B;&#x3002;&#x7528;&#x4E8E;&#x89E3;&#x51B3;&#xFF0C;&#x56E0;&#x4E3A;&#x56FE;&#x50CF;&#x6570;&#x636E;&#x91CF;&#x5927;&#x5BFC;&#x81F4;&#x7684;&#x5904;&#x7406;&#x6548;&#x7387;&#x4F4E;&#xFF1B;&#x548C;&#x56FE;&#x50CF;&#x5728;&#x6570;&#x5B57;&#x5316;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x96BE;&#x4EE5;&#x4FDD;&#x7559;&#x7684;&#x7279;&#x5F81;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
+<h3 class="mume-header" id="recurrent-neural-network">Recurrent Neural Network</h3>
+
+<blockquote>
+<p><a href="./src/demo-LSTM.py"><code>demo-LSTM.py</code></a></p>
+</blockquote>
+<pre data-role="codeBlock" data-info="py" class="language-python"><span class="token keyword">import</span> tensorflow <span class="token keyword">as</span> tf
+<span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>python<span class="token punctuation">.</span>ops<span class="token punctuation">.</span>rnn_cell_impl <span class="token keyword">import</span> BasicRNNCell
+<span class="token comment"># from tensorflow.python.ops.rnn_cell_impl import BasicLSTMCell</span>
+
+<span class="token comment">#...</span>
+
+<span class="token comment"># Cell</span>
+generate_one_cell <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> BasicRNNCell<span class="token punctuation">(</span>rnn_unit<span class="token punctuation">)</span><span class="token punctuation">)</span>
+cell <span class="token operator">=</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>rnn_cell<span class="token punctuation">.</span>MultiRNNCell<span class="token punctuation">(</span><span class="token punctuation">[</span>generate_one_cell<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rnn_deep<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+init_state <span class="token operator">=</span> cell<span class="token punctuation">.</span>zero_state<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+
+<span class="token comment"># &#x5EFA;&#x7ACB;&#x7F51;&#x7EDC;</span>
+input_reshaped <span class="token operator">=</span> tf<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>input_tensor<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> input_size<span class="token punctuation">]</span><span class="token punctuation">)</span>
+input_weighted <span class="token operator">=</span> tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>input_reshaped<span class="token punctuation">,</span> weights_input<span class="token punctuation">)</span> <span class="token operator">+</span> biases_input
+rnn_input <span class="token operator">=</span> tf<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>input_weighted<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> time_step<span class="token punctuation">,</span> rnn_unit<span class="token punctuation">]</span><span class="token punctuation">)</span>
+rnn_output<span class="token punctuation">,</span> final_states <span class="token operator">=</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>dynamic_rnn<span class="token punctuation">(</span>cell<span class="token punctuation">,</span> rnn_input<span class="token punctuation">,</span> initial_state<span class="token operator">=</span>init_state<span class="token punctuation">,</span> dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+
+y_pred <span class="token operator">=</span> tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>
+    tf<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>rnn_output<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> rnn_unit<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    weights_output
+<span class="token punctuation">)</span> <span class="token operator">+</span> biases_output
+</pre><p><strong>&#x8FD0;&#x884C;&#x6548;&#x679C;</strong></p>
+<p><img src="./images/lstm_result.png" alt="lstm_result"></p>
+
       </div>
       
       
@@ -976,7 +1147,20 @@ loss_mae2 <span class="token operator">=</span> tf<span class="token punctuation
     
     
     
-    
+    <script>
+var flowcharts = document.getElementsByClassName('flow')
+for (var i = 0; i < flowcharts.length; i++) {
+  var flow = flowcharts[i]
+  try {
+    var diagram = flowchart.parse(flow.textContent)
+    flow.id = 'flow_' + i
+    flow.innerHTML = ''
+    diagram.drawSVG(flow.id)
+  } catch (error) {
+    flow.innerHTML = '<pre class="language-text">' + error.toString() + '</pre>'
+  }
+}
+</script>
     
     
   

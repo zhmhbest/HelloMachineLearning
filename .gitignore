@@ -3,5 +3,4 @@
 **/cache
 **/summary
 .vscode/
-.idea/
 **test.py

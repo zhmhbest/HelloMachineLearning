@@ -1,51 +1,24 @@
 <link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
 <script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
 
-# [深度学习](https://github.com/zhmhbest/HelloDeepLearning)
+# [机器学习](https://github.com/zhmhbest/HelloMachineLearning)
 
-## 序
+## Preface
+
+### 准备工作
 
 - 实践本知识前，请确保已有一定的[机器学习知识](http://zhmhbest.gitee.io/hellomathematics/notes/MachineLearning/index.html)储备。
-- 请确保已经搭建完成[GPU运算环境](https://zhmhbest.github.io/HelloCUDA/)。
-- [`Tensorflow`](https://tensorflow.google.cn/)是一个端到端开源机器学习平台。
-- [`Keras`](https://keras.io/)是一个用Python编写的高级神经网络API，它能够以TensorFlow（或Theano、CNTK）作为后端运行。
+- 请确保已经搭建完成[GPU运算环境](https://zhmhbest.github.io/HelloCUDA/notes/index.html)。
 
-## [Tensorflow](./tensorflow/tf.html)
+### 相关软件
 
-### [Tensor](./tensorflow/tf.html#tensor)
+- [`Scikit-learn`](https://scikit-learn.org/)
+- [`Tensorflow`](https://tensorflow.google.cn/)
+- [`Keras`](https://keras.io/)
+- [`Pytorch`](https://pytorch.org/)
 
-### [Session](./tensorflow/tf.html#session)
+## [Scikit-learn](./sklearn/index.html)
 
-### [Variable](./tensorflow/tf.html#variable)
+## [Tensorflow](./tensorflow/index.html)
 
-### [Graph](./tensorflow/tf.html#graph)
-
-### [TensorBoard](./tensorflow/tf.html#tensorboard)
-
-### [Activate](./tensorflow/tf.html#activate)
-
-### [Loss](./tensorflow/tf.html#loss)
-
-### [Optimizer](./tensorflow/tf.html#optimizer)
-
-### [Demonstrate](./tensorflow/demonstrate.html)
-
-## [Keras](./keras/keras.html)
-
-### [Hello](./keras/keras.html#hello)
-
-#### [定义模型](./keras/keras.html#定义模型)
-
-#### [编译模型](./keras/keras.html#编译模型)
-
-#### [训练模型](./keras/keras.html#训练模型)
-
-#### [保存模型](./keras/keras.html#保存模型)
-
-#### [评估模型](./keras/keras.html#评估模型)
-
-#### [预测数据](./keras/keras.html#预测数据)
-
-### [Backend](./keras/keras.html#backend)
-
-### [Demonstrate](./keras/keras.html#demonstrate)
+## [Keras](./keras/index.html)

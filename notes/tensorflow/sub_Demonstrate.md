@@ -1,11 +1,6 @@
-<link rel="stylesheet" href="https://zhmhbest.gitee.io/hellomathematics/style/index.css">
-<script src="https://zhmhbest.gitee.io/hellomathematics/style/index.js"></script>
+## Demonstrate
 
-# [Demonstrate](../index.html)
-
-[TOC]
-
-## Hello
+### Hello
 
 >[`demo-Hello.py`](./src/demo-Hello.py)
 
@@ -21,7 +16,7 @@ ed=>end: 结束
 st->datasets->networks->loss->optimizer->training->ed
 ```
 
-## Learning Rate
+### Learning Rate
 
 >[`demo-LearningRate.py`](./src/demo-LearningRate.py)
 
@@ -51,7 +46,7 @@ decayed_learning_rate = tf.train.exponential_decay(
 )
 ```
 
-## Fitting
+### Fitting
 
 >[`demo-Fitting.py`](./src/demo-Fitting.py)
 
@@ -73,19 +68,19 @@ loss_l2 = tf.add_n(tf.get_collection('losses')) + loss
 train_op = tf.train.AdamOptimizer(LEARNING_RATE).minimize(loss_l2)
 ```
 
-### 欠拟合
+#### 欠拟合
 
 ![](./images/fitting_1.png)
 
-### 过拟合
+#### 过拟合
 
 ![](./images/fitting_2.png)
 
-### 拟合（L2正则化）
+#### 拟合（L2正则化）
 
 ![](./images/fitting_3.png)
 
-## Moving
+### Moving
 
 >[`demo-Moving.py`](./src/demo-Moving.py)
 
@@ -119,7 +114,7 @@ train_op = tf.train.Optimizer(learning_rate).minimize(loss)
 train_ops = [train_op, ema_op]
 ```
 
-## Restore
+### Restore
 
 >[`demo-Restore.py`](./src/demo-Restore.py)
 
@@ -135,19 +130,19 @@ with tf.Session() as sess:
     saver.save(sess, model_location)
 ```
 
-## TensorBoard
+### TensorBoard
 
 >[`demo-TensorBoard.py`](./src/demo-TensorBoard.py)
 
 可视化预览模型。
 
-## Convolutional Neural Networks
+### Convolutional Neural Networks
 
 >[`demo-CNN.py`](./src/demo-CNN.py)
 
 能够按其阶层结构对输入信息进行平移不变分类。用于解决，因为图像数据量大导致的处理效率低；和图像在数字化的过程中难以保留的特征的问题。
 
-## Recurrent Neural Network
+### Recurrent Neural Network
 
 >[`demo-LSTM.py`](./src/demo-LSTM.py)
 
