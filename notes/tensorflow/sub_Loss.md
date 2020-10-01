@@ -179,3 +179,17 @@ loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y_true, log
 ```py
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred))
 ```
+
+### 正则化
+
+$$\bar{J}(w, b) = J(w, b) + \dfrac{λ}{m}R(w)$$
+
+- $λ$：正则化力度（超参数）
+- $m$：元素个数
+- $R(w)$
+  - $L_1$：$R(w) = \|w\|_1   = \sum_{i} |w_i| $
+  - $L_2$：$R(w) = \|w\|_2^2 = \sum_{i} w_i^2 $
+
+正则化主要用于避免过拟合的产生和减少网络误差。
+
+$L_1$正则化会让参数变得稀疏，且不可导；对$L_2$正则化的损失函数优化更加简洁。
