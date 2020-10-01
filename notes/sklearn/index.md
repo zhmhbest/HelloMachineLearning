@@ -7,9 +7,7 @@
 
 ## 特征工程
 
-### 特征抽取
-
-- [`feature_extraction.py`](SRC/feature_extraction.py)
+### [`特征抽取`](src/feature_extraction.py)
 
 原始数据转化为更好地代表预测模型的潜在问题的特征的过程。
 
@@ -22,17 +20,13 @@ idf: 逆文档频率（inverse document frequency）
 
 用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。
 
-### 特征过滤
-
-- [`feature_filter.py`](SRC/feature_filter.py)
+### [`特征过滤`](src/feature_filter.py)
 
 #### 主成分分析
 
 利用正交变换把由现行相关变量表示的观测数据转化为少数几个由线性无关变量表示的数据，线性无关的变量称为主成分。主成分的个数通常小于原始变量的个数，所以属于降维方法。主成分分析虽然损失了少量信息，但提高了有效信息的比率。
 
-### 特征预处理
-
-- [`feature_preprocessing.py`](SRC/feature_preprocessing.py)
+### [`特征预处理`](src/feature_preprocessing.py)
 
 #### OneHot
 
