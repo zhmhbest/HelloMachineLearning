@@ -1,6 +1,7 @@
-**/__pycache__
-**/dump
-**/cache
-**/summary
+__pycache__/
+dump/
+cache/
+summary/
 .vscode/
-**test.py
+.idea/
+test.py
