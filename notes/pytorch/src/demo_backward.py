@@ -1,4 +1,5 @@
 import torch
+from torch.nn import MSELoss
 from torch.nn import Sequential
 from torch.nn import ReLU
 
@@ -38,12 +39,37 @@ model = Sequential(
     Linear(84, 10)
 )
 
-# 生成1张单通道32×32像素的图片
-data = torch.randn(1, 1, 32, 32)
 
-# 前向传播
-out = model(data)
+def demo_backward():
+    # 生成1张单通道32×32像素的图片
+    data_x = torch.randn(1, 1, 32, 32)
+    # data_y = torch.randn(10).view(1, -1)
 
-# 反向传播（参数梯度缓存器置零，使用随机梯度）
-model.zero_grad()
-out.backward(torch.randn(1, 10))
+    # 前向传播
+    pred_y = model(data_x)
+
+    # 反向传播
+    pred_y.backward(torch.randn(1, 10))
+    print("RAND", "channel[0].weight.grad[0][0][0]:", model[0].weight.grad[0][0][0])
+
+    # 梯度置为0
+    model.zero_grad()
+    print("ZERO", "channel[0].weight.grad[0][0][0]:", model[0].weight.grad[0][0][0])
+
+
+def demo_loss_backward():
+    data_x = torch.randn(1, 1, 32, 32)
+    data_y = torch.randn(10).view(1, -1)
+    pred_y = model(data_x)
+
+    # 损失函数
+    loss_fn = MSELoss()
+    loss_val = loss_fn(data_y, pred_y)
+    print("LOSS", loss_val)
+    loss_val.backward()
+    print("LOSS", "channel[0].weight.grad[0][0][0]:", model[0].weight.grad[0][0][0])
+
+
+if __name__ == '__main__':
+    demo_backward()
+    demo_loss_backward()
