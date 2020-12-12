@@ -1,6 +1,5 @@
 import torch
-from torch import nn
-from torch.nn import Module, Sequential
+from torch.nn import Sequential
 from torch.nn import ReLU
 
 # in_channels,
