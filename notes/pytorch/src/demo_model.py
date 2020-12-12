@@ -47,3 +47,9 @@ class MyModel(Module):
 
 model4 = MyModel()
 print(model4)
+
+model = model4
+# 模型的所有可训练参数
+for it in model.parameters():
+    # 每层可训练参数
+    print(it.size())
