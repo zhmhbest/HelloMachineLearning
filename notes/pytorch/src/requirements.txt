@@ -1,17 +1,22 @@
+# Python 3.6.8
 # pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ -f https://download.pytorch.org/whl/torch_stable.html
 # pip download -r requirements.txt -d packages -i https://mirrors.aliyun.com/pypi/simple/ -f https://download.pytorch.org/whl/torch_stable.html
-# pip install -r requirements.txt --no-index -f package
+# pip install -r requirements.txt --no-index -f packages
+
+# Base
 numpy==1.16.4
 pandas==1.0.2
 matplotlib==3.1.0
+
+# Sklearn
+numpy
+scipy==1.4.1
+joblib==0.14.0
 scikit-learn==0.21.2
-joblib==0.16.0
-scipy==1.5.4
-# Tensorflow
-# tensorflow==1.8.0
-# keras==2.1.5
-# h5py==2.10.0
+
 # PyTorch
+numpy
+Pillow==8.0.1 # Python Imaging Library
 torch==1.7.0+cpu
 torchvision==0.8.1+cpu
 torchaudio===0.7.0
