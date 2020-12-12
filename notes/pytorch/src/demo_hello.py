@@ -1,4 +1,4 @@
-# https://pytorch.org/docs/stable/torch.html
+# http://pytorch.panchuang.net/
 import torch
 
 x = torch.tensor([1])
