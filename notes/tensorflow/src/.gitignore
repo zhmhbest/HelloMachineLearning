@@ -1,0 +1,8 @@
+/.idea/
+/.vscode/
+/packages/
+/data/
+cache/
+dump/
+summary/
+.trash/
