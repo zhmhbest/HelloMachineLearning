@@ -14,7 +14,7 @@ def get_linear_data(size, slope, noise_intensity, is_plot=False):
     :return:
     """
     _x = np.arange(size)
-    _noise = np.random.uniform(-1, 1, DATA_SIZE) * noise_intensity
+    _noise = np.random.uniform(-1, 1, size) * noise_intensity
     _y = slope * (_x + _noise)
     if is_plot:
         plt.plot(_x, (slope * _x), label='Origin', linestyle='-.')
