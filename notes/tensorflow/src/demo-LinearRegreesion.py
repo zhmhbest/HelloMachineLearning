@@ -14,16 +14,16 @@ def get_linear_data(size, slope, noise_intensity, is_plot=False):
     :return:
     """
     _x = np.arange(size)
-    _noise = np.random.rand(DATA_SIZE) * noise_intensity
+    _noise = np.random.uniform(-1, 1, DATA_SIZE) * noise_intensity
     _y = slope * (_x + _noise)
     if is_plot:
-        plt.plot(_x, (slope * _x), label='Origin')
+        plt.plot(_x, (slope * _x), label='Origin', linestyle='-.')
     return _x.reshape(-1, 1), _y.reshape(-1, 1)
 
 
 # 【加载数据】
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-DATA_SIZE = 128
+DATA_SIZE = 512
 x_train, y_train = get_linear_data(DATA_SIZE, 3, 50, True)
 INPUT_SIZE = x_train.shape[-1]
 OUTPUT_SIZE = y_train.shape[-1]
@@ -92,8 +92,8 @@ with tf.Session() as sess:
 # 【展示结果】
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 y_pred = np.matmul(x_train, w_value) + b_value
-plt.scatter(x_train, y_train, c='pink', label='Real Dataset')
-plt.plot(y_pred, label='Fitting')
+plt.scatter(x_train, y_train, label='Real Dataset', c='pink', s=10)
+plt.plot(y_pred, label='Fitting', linestyle='-.')
 plt.legend()
 plt.grid()
 plt.show()
